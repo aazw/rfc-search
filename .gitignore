@@ -1,0 +1,9 @@
+rfc/*
+!rfc/.gitkeep
+
+dist/*
+!dist/.gitkeep
+
+node_modules/
+
+.DS_Store

@@ -1,0 +1,9 @@
+{
+  "name": "Node.js",
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "devcontainer",
+  "workspaceFolder": "/workspace",
+  "shutdownAction": "stopCompose",
+  "settings": {},
+  "extensions": ["dbaeumer.vscode-eslint", "ms-azuretools.vscode-docker"]
+}
