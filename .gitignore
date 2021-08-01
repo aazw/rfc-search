@@ -1,8 +1,8 @@
 rfc/*
 !rfc/.gitkeep
 
-dist/*
-!dist/.gitkeep
+docs/*
+!docs/.gitkeep
 
 node_modules/
 
