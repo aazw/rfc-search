@@ -21,7 +21,7 @@ jobs:
     - name: Download and unzip RFC
       run: ./scripts/download_rfc.sh
 
-    - name: Generat index.html
+    - name: Generate index.html
       run: npm start
 
     - name: Commit and push

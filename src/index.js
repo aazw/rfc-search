@@ -194,7 +194,7 @@ async function writeResultToHTML(
 
   try {
     await fs.writeFile(outputFilePath, html.trim());
-  } catch {
+  } catch(err) {
     console.error(err);
     throw err;
   }
@@ -211,7 +211,7 @@ async function main() {
     .option(
       "--htmlOutputFilePath <htmlOutputFilePath>",
       "file path which html file will be exported",
-      "./dist/index.html"
+      "./docs/index.html"
     );
   program.parse(process.argv);
   const options = program.opts();
