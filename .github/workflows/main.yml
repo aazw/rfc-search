@@ -1,0 +1,67 @@
+name: Generate index.html
+on:
+  push:
+    branches:
+      - 'main'
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [10.x, 12.x, 14.x, 15.x]
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+
+    - name: Download and unzip RFC
+      run: ./scripts/download_rfc.sh
+
+    - name: Generat index.html
+      run: npm start
+
+    - name: Commit and push
+      run: |
+        git config user.name github-actions
+        git config user.email github-actions@github.com
+        git add -f docs/index.html
+        git commit -m "generated"
+        git push
+
+    # - run: npm ci
+    # - run: npm run build --if-present
+    # - run: npm test
+    # - name: Installing PHP
+    #   uses: shivammathur/setup-php@master
+    #   with:
+    #     php-version: 7.3
+    #     extension-csv: mbstring, xdebug
+    # - name: Add Plugin
+    #   run: sudo apt install -y php7.3-xml
+    # - name: check php
+    #   run: php -v
+    # - name: composer install
+    #   run: |
+    #     cd app
+    #     composer install
+    # - name: ごにょごにょ
+    #   run: |
+    #     cd app
+    #     php calculate.php
+    # - name: git setting
+    #   run: |
+    #     git config --local user.email "メールアドレスをここに入力"
+    #     git config --local user.name "Githubのアカウントをここに入力"
+    # - name: Commit files
+    #   run: |
+    #     git add .
+    #     git commit -m "Add csv" -a
+    #     git pull
+    #     git push origin master
