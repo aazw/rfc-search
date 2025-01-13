@@ -27,31 +27,6 @@ appLogger.addHandler(handler)
 # https://kdotdev.com/kdotdev/python-typed-dict
 # https://qiita.com/simonritchie/items/63218b0a5c4a3d3632a1
 class RFCEntry(TypedDict):
-    # doc_id: str
-    # title: str
-    # author: list[dict]
-    # date: dict
-    # format: Optional[list[str]]
-    # page_count: str
-    # keywords: Optional[List[str]]
-    # is_also: Optional[List[str]]
-    # obsoletes: Optional[List[str]]
-    # obsoleted_by: Optional[List[str]]
-    # updates: Optional[List[str]]
-    # updated_by: Optional[List[str]]
-    # see_also: Optional[List[str]]
-    # references: Optional[List[str]]
-    # referenced_by: Optional[List[str]]
-    # see_also: Optional[List[str]]
-    # abstract: str
-    # draft: str
-    # current_status: str
-    # publication_status: str
-    # stream: str
-    # errata_url: str
-    # area: str
-    # wg_acronym: str
-    # doi: str
     doc_id: str
     title: str
     author: list[dict]
