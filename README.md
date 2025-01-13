@@ -1,4 +1,7 @@
-# rfc-search
+# RFC Search
+
+A web tool for easily searching and visualizing RFCs and their dependencies.
+
 
 ## 概要
 

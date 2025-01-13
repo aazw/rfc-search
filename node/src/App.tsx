@@ -8,7 +8,7 @@ export default function App() {
   return (
     <>
       <div>
-        <h1 className="text-2xl font-bold py-2">RFC</h1>
+        <h1 className="text-2xl font-bold py-2">RFC Search</h1>
       </div>
       <Table></Table>
     </>
