@@ -30,10 +30,10 @@ def remove_zerofill(doc_id: str):
 
 
 @click.command()
-@click.option("--url", type=str, default="https://www.rfc-editor.org/rfc-index.xml", help="")
-@click.option("--output", type=click.Choice(["stdout", "file", "duckdb"], case_sensitive=False), default="stdout", help="")
-@click.option("--file", type=str, required=False, default=None, help="file to output")
-@click.option("--prettyprint", is_flag=True, show_default=True, default=False, help="")
+@click.option("--url", type=str, default="https://www.rfc-editor.org/rfc-index.xml", required=False, show_default=True, help="XMLを取得するURLで、基本変更しない")
+@click.option("--output", type=click.Choice(["stdout", "file", "duckdb"], case_sensitive=False), default="stdout", help="取得結果を出力するファイルフォーマット")
+@click.option("--file", type=str, required=False, default=None, help="取得結果がファイルの場合の出力先")
+@click.option("--prettyprint", is_flag=True, show_default=True, default=False, help="出力がstdoutかfileの場合、Pretty PrintなJSONで出力するかどうか")
 def main(url: str, output: str, file: str, prettyprint: bool):
     appLogger.info(f"app start")
     appLogger.info(f"command line argument: url = {url}")
@@ -435,4 +435,4 @@ def main(url: str, output: str, file: str, prettyprint: bool):
 
 
 if __name__ == "__main__":
-    main()
+    main(max_content_width=400)

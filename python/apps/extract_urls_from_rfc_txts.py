@@ -25,9 +25,9 @@ appLogger.addHandler(handler)
 
 
 @click.command()
-@click.option("--url", type=str, default="https://www.rfc-editor.org/in-notes/tar/RFC-all.zip", help="https://www.rfc-editor.org/retrieve/bulk/")
-@click.option("--zipfile", type=str, default=None, required=False, help="")
-@click.option("--output", type=str, default=None, required=False, help="")
+@click.option("--url", type=str, default="https://www.rfc-editor.org/in-notes/tar/RFC-all.zip", required=False, show_default=True, help="各RFC本文を取得するURLで、基本変更しない")
+@click.option("--zipfile", type=str, default=None, required=False, help="各RFC本文をURLから取得せずローカルのファイルを参照する場合に利用する")
+@click.option("--output", type=str, default=None, required=False, help="各RFCから他RFCへの参照URLの抽出結果を出力するファイル")
 def main(
     url: str,
     zipfile: str,

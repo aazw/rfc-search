@@ -22,8 +22,8 @@ appLogger.addHandler(handler)
 
 
 @click.command()
-@click.option("--dbfile", type=str, required=True, default=None, help="")
-@click.option("--input", type=str, required=True, default=None, help="json file about rfc references")
+@click.option("--dbfile", type=str, required=True, default=None, help="trasform_rfc_xmls.pyで出力したDuckDB形式のファイル(結果はこのファイルに追加される)")
+@click.option("--input", type=str, required=True, default=None, help="extract_urls_from_rfc_txts.pyで出力したJSON形式のファイル")
 def main(dbfile: str, input: str):
     appLogger.info(f"app start")
     appLogger.info(f"command line argument: dbfile = {dbfile}")
