@@ -25,33 +25,36 @@ jobs:
         uses: actions/checkout@v4
       - name: Setup Python
         uses: actions/setup-python@v5
-        working-directory: python/
         with:
           python-version: '3.11' 
           cache: 'pip'
+          cache-dependency-path: '**/requirements.txt'
       - name: Setup pip
-        working-directory: python/
-        run:  pip install -r requirements.txt
+        run:  |
+          cd python 
+          pip install -r requirements.txt
       - name: Setup Node
         uses: actions/setup-node@v4
-        working-directory: node/
         with:
           node-version: 22
           cache: npm
+          cache-dependency-path: '**/package-lock.json'
       - name: Setup npm
-        working-directory: node/
-        run:  npm install
-      - name: Build DuckDB Persistent Database
-        working-directory: python/
         run: |
+          cd node
+          npm install
+      - name: Build DuckDB Persistent Database
+        run: |
+          cd python
           python apps/trasform_rfc_xmls.py --output duckdb --file ./rfc.duckdb
           python apps/extract_urls_from_rfc_txts.py --output ./rfc-reference-urls.json
           python apps/add_references_to_duckdb_persistent_db.py --dbfile ./rfc.duckdb --input ./rfc-reference-urls.json
       - name: Copy DuckDB Persistent Database
         run:  cp python/rfc.duckdb node/src/rfc.duckdb
       - name: Build with Vite
-        working-directory: node/
-        run:  npm run build
+        run: |
+          cd node
+          npm run build
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Upload artifact
