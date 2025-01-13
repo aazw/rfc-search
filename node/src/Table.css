@@ -1,0 +1,41 @@
+.toolbar {
+  width: 100%;
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: row;
+}
+
+.toolbar-input {
+  flex-grow: 1;
+}
+
+.toolbar-total {
+  white-space: nowrap;
+}
+
+.table-container {
+  width: calc(100%);
+  display: block;
+  overflow: auto;
+  font-size: 10px;
+}
+
+table {
+  min-width: calc(100%);
+  table-layout: fixed;
+  border: 1px white solid;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  border: 1px white solid;
+  padding: 5px;
+  vertical-align: top;
+}
+
+th:nth-child(2),
+td:nth-child(2) {
+  width: 400px;
+  /* white-space: nowrap; */
+}

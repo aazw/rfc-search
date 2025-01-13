@@ -1,9 +1,39 @@
 {
-  "name": "Node.js",
-  "dockerComposeFile": "docker-compose.yml",
-  "service": "devcontainer",
-  "workspaceFolder": "/workspace",
-  "shutdownAction": "stopCompose",
-  "settings": {},
-  "extensions": ["dbaeumer.vscode-eslint", "ms-azuretools.vscode-docker"]
+	"name": "vsc-rfcpedia",
+	"build": {
+		"dockerfile": "Dockerfile"
+	},
+	"features": {},
+	"forwardPorts": [],
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"ms-azuretools.vscode-docker",
+				"ms-python.python",
+				"ms-python.black-formatter",
+				"ms-python.isort",
+				"dbaeumer.vscode-eslint",
+				"esbenp.prettier-vscode",
+				"bradlc.vscode-tailwindcss"
+			]
+		}
+	},
+	"remoteUser": "root",
+	"mounts": [
+		{
+			"type": "bind",
+			"source": "/var/run/docker.sock",
+			"target": "/var/run/docker.sock"
+		}
+	],
+	"remoteEnv": {
+		"LOCAL_WORKSPACE_FOLDER": "${localWorkspaceFolder}"
+	},
+	"runArgs": [
+		"--name",
+		"vsc-rfcpedia",
+		"--add-host",
+		"host.docker.internal:host-gateway"
+	],
+	"postCreateCommand": "npm install"
 }
