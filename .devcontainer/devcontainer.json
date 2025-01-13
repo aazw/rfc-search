@@ -34,6 +34,5 @@
 		"vsc-rfc-search",
 		"--add-host",
 		"host.docker.internal:host-gateway"
-	],
-	"postCreateCommand": "npm install"
+	]
 }
