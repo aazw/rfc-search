@@ -56,8 +56,7 @@ $ python apps/extract_urls_from_rfc_txts.py --help
 Usage: extract_urls_from_rfc_txts.py [OPTIONS]
 
 Options:
-  --url TEXT      各RFC本文を取得するURLで、基本変更しない  [default: https://www.rfc-
-                  editor.org/in-notes/tar/RFC-all.zip]
+  --url TEXT      各RFC本文を取得するURLで、基本変更しない  [default: https://www.rfc-editor.org/in-notes/tar/RFC-all.zip]
   --zipfile TEXT  各RFC本文をURLから取得せずローカルのファイルを参照する場合に利用する
   --output TEXT   各RFCから他RFCへの参照URLの抽出結果を出力するファイル
   --help          Show this message and exit.
@@ -81,12 +80,11 @@ $ python apps/extract_urls_from_rfc_txts.py --zipfile ./RFC-all.zip --output ./r
 
 ```bash
 # Example:
-$ python apps/add_references_to_duckdb_persistent_db.py --help
+$ $ python apps/add_references_to_duckdb_persistent_db.py --help
 Usage: add_references_to_duckdb_persistent_db.py [OPTIONS]
 
 Options:
-  --dbfile TEXT  trasform_rfc_xmls.pyで出力したDuckDB形式のファイル(結果はこのファイルに追加される)
-                 [required]
+  --dbfile TEXT  trasform_rfc_xmls.pyで出力したDuckDB形式のファイル(結果はこのファイルに追加される)  [required]
   --input TEXT   extract_urls_from_rfc_txts.pyで出力したJSON形式のファイル  [required]
   --help         Show this message and exit.
 ```
@@ -103,9 +101,34 @@ Main Scriptsを補助するものであったり、開発の調査目的もの�
 
 ### apps/get_xmlpaths_from_rfc_xmls.py  
 
+`trasform_rfc_xmls.py`で使っているRFC一覧のXML形式のXMLファイルの、要素の一覧をXPath形式で出力するツール.  
+開発時の要素名・構造の解析用.
 
+```bash
+# Example:
+$ python apps/get_xmlpaths_from_rfc_xmls.py --help
+Usage: get_xmlpaths_from_rfc_xmls.py [OPTIONS]
+
+Options:
+  --url TEXT  RFC一覧のXML形式が取得できるエンドポイント
+  --help      Show this message and exit.
+```
 
 ### apps/verify_duckdb_persistent_db.py
+
+`trasform_rfc_xmls.py`で作成したDuckDBのPersistent Databaseのファイルが、ちゃんと読み込めるファイルになっているか、実際に読んでみて検証するためのもの.  
+デフォルトでは概要として一部列や行が省略されたテーブルが表示されるが、columnを指定することで特定の列のみ表示することもできる.
+
+```bash
+# Example
+$ python apps/verify_duckdb_persistent_db.py --help
+Usage: verify_duckdb_persistent_db.py [OPTIONS]
+
+Options:
+  --dbfile TEXT  DuckDBのPersistent Database形式のファイル  [required]
+  --column TEXT  特定のカラムのみ出力したい場合にカラム名を指定する
+  --help         Show this message and exit.
+```
 
 
 ## References

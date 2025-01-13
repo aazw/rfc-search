@@ -1,5 +1,5 @@
 {
-	"name": "vsc-rfcpedia",
+	"name": "vsc-rfc-search",
 	"build": {
 		"dockerfile": "Dockerfile"
 	},
@@ -31,7 +31,7 @@
 	},
 	"runArgs": [
 		"--name",
-		"vsc-rfcpedia",
+		"vsc-rfc-search",
 		"--add-host",
 		"host.docker.internal:host-gateway"
 	],

@@ -11,5 +11,5 @@ export default defineConfig({
   },
 
   // https://zenn.dev/kanakanho/articles/3a8b313e698b7f
-  base: process.env.GITHUB_PAGES ? "rfc-relationships" : "./",
+  base: process.env.GITHUB_PAGES ? "rfc-search" : "./",
 });

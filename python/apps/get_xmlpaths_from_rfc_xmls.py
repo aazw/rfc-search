@@ -93,7 +93,7 @@ def print_xml_paths(element, path="") -> set:
 
 
 @click.command()
-@click.option("--url", type=str, default="https://www.rfc-editor.org/rfc-index.xml", help="")
+@click.option("--url", type=str, default="https://www.rfc-editor.org/rfc-index.xml", help="RFC一覧のXML形式が取得できるエンドポイント")
 def main(url: str):
     appLogger.info(f"app start")
     appLogger.info(f"command line argument: url = {url}")

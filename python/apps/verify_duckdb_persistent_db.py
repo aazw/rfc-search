@@ -20,8 +20,8 @@ appLogger.addHandler(handler)
 
 
 @click.command()
-@click.option("--dbfile", type=str, required=True, default=None, help="")
-@click.option("--column", type=str, required=False, default=None, help="")
+@click.option("--dbfile", type=str, required=True, default=None, help="DuckDBのPersistent Database形式のファイル")
+@click.option("--column", type=str, required=False, default=None, help="特定のカラムのみ出力したい場合にカラム名を指定する")
 def main(dbfile: str, column: str):
     appLogger.info(f"app start")
     appLogger.info(f"command line argument: dbfile = {dbfile}")
