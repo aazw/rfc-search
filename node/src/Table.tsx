@@ -10,7 +10,7 @@ import React, { useState, useEffect } from "react";
 
 import "./Table.css";
 
-function convertMonthExpression(month: String): String {
+function convertMonthExpression(month: string): string {
   switch (month) {
     case "January":
     case "Jan":
@@ -52,37 +52,37 @@ function convertMonthExpression(month: String): String {
 }
 
 interface RFCEntry {
-  doc_id: String;
-  title: String;
+  doc_id: string;
+  title: string;
   author: {
-    name: String;
-    title: String;
+    name: string;
+    title: string;
   }[];
   date: {
-    year: String;
-    month: String;
-    day: String;
+    year: string;
+    month: string;
+    day: string;
   };
-  format: String[];
-  page_count: String;
-  keywords: String[];
-  is_also: String[];
-  obsoletes: String[];
-  obsoleted_by: String[];
-  updates: String[];
-  updated_by: String[];
-  see_also: String[];
-  refers: String[];
-  referred_by: String[];
-  abstract: String;
-  draft: String;
-  current_status: String;
-  publication_status: String;
-  stream: String;
-  errata_url: String;
-  area: String;
-  wg_acronym: String;
-  doi: String;
+  format: string[];
+  page_count: string;
+  keywords: string[];
+  is_also: string[];
+  obsoletes: string[];
+  obsoleted_by: string[];
+  updates: string[];
+  updated_by: string[];
+  see_also: string[];
+  references: string[];
+  referenced_by: string[];
+  abstract: string;
+  draft: string;
+  current_status: string;
+  publication_status: string;
+  stream: string;
+  errata_url: string;
+  area: string;
+  wg_acronym: string;
+  doi: string;
 }
 
 async function initDuckDB(): Promise<duckdb.AsyncDuckDB> {
@@ -146,32 +146,32 @@ async function getRFCEntries({ db, searchText = "", limit = 100, offset = 0 }: G
                 count(*) as total
             FROM rfc_entries
             WHERE 
-                doc_id                             LIKE '%${searchText}%' or
-                title                              LIKE '%${searchText}%' or
+                doc_id                              LIKE '%${searchText}%' or
+                title                               LIKE '%${searchText}%' or
                 len(list_filter(author, x -> x.name LIKE '%${searchText}%' or x.title LIKE '%${searchText}%' )) >= 1 or
-                date.year                          LIKE '%${searchText}%' or
-                date.month                         LIKE '%${searchText}%' or
-                date.day                           LIKE '%${searchText}%' or
-                array_to_string(format, ' ')       LIKE '%${searchText}%' or
-                page_count                         LIKE '%${searchText}%' or
-                array_to_string(keywords, ' ')     LIKE '%${searchText}%' or
-                array_to_string(is_also, ' ')      LIKE '%${searchText}%' or
-                array_to_string(obsoletes, ' ')    LIKE '%${searchText}%' or
-                array_to_string(obsoleted_by, ' ') LIKE '%${searchText}%' or
-                array_to_string(updates, ' ')      LIKE '%${searchText}%' or
-                array_to_string(updated_by, ' ')   LIKE '%${searchText}%' or
-                array_to_string(see_also, ' ')     LIKE '%${searchText}%' or
-                array_to_string(refers, ' ')       LIKE '%${searchText}%' or
-                array_to_string(referred_by, ' ')  LIKE '%${searchText}%' or
-                abstract                           LIKE '%${searchText}%' or
-                draft                              LIKE '%${searchText}%' or
-                current_status                     LIKE '%${searchText}%' or
-                publication_status                 LIKE '%${searchText}%' or
-                stream                             LIKE '%${searchText}%' or
-                errata_url                         LIKE '%${searchText}%' or
-                area                               LIKE '%${searchText}%' or
-                wg_acronym                         LIKE '%${searchText}%' or
-                doi                                LIKE '%${searchText}%'`;
+                date.year                           LIKE '%${searchText}%' or
+                date.month                          LIKE '%${searchText}%' or
+                date.day                            LIKE '%${searchText}%' or
+                array_to_string(format, ' ')        LIKE '%${searchText}%' or
+                page_count                          LIKE '%${searchText}%' or
+                array_to_string(keywords, ' ')      LIKE '%${searchText}%' or
+                array_to_string(is_also, ' ')       LIKE '%${searchText}%' or
+                array_to_string(obsoletes, ' ')     LIKE '%${searchText}%' or
+                array_to_string(obsoleted_by, ' ')  LIKE '%${searchText}%' or
+                array_to_string(updates, ' ')       LIKE '%${searchText}%' or
+                array_to_string(updated_by, ' ')    LIKE '%${searchText}%' or
+                array_to_string(see_also, ' ')      LIKE '%${searchText}%' or
+                array_to_string("references", ' ')  LIKE '%${searchText}%' or
+                array_to_string(referenced_by, ' ') LIKE '%${searchText}%' or
+                abstract                            LIKE '%${searchText}%' or
+                draft                               LIKE '%${searchText}%' or
+                current_status                      LIKE '%${searchText}%' or
+                publication_status                  LIKE '%${searchText}%' or
+                stream                              LIKE '%${searchText}%' or
+                errata_url                          LIKE '%${searchText}%' or
+                area                                LIKE '%${searchText}%' or
+                wg_acronym                          LIKE '%${searchText}%' or
+                doi                                 LIKE '%${searchText}%'`;
   }
 
   const resultTotal = await conn.query(queryString);
@@ -196,8 +196,8 @@ async function getRFCEntries({ db, searchText = "", limit = 100, offset = 0 }: G
                 updates, 
                 updated_by, 
                 see_also, 
-                refers,
-                referred_by,
+                "references",
+                referenced_by,
                 abstract, 
                 draft, 
                 current_status, 
@@ -228,8 +228,8 @@ async function getRFCEntries({ db, searchText = "", limit = 100, offset = 0 }: G
                 updates, 
                 updated_by,
                 see_also, 
-                refers,
-                referred_by, 
+                "references",
+                referenced_by, 
                 abstract, 
                 draft, 
                 current_status, 
@@ -241,32 +241,32 @@ async function getRFCEntries({ db, searchText = "", limit = 100, offset = 0 }: G
                 doi 
             FROM rfc_entries
             WHERE 
-                doc_id                             LIKE '%${searchText}%' or
-                title                              LIKE '%${searchText}%' or
+                doc_id                              LIKE '%${searchText}%' or
+                title                               LIKE '%${searchText}%' or
                 len(list_filter(author, x -> x.name LIKE '%${searchText}%' or x.title LIKE '%${searchText}%' )) >= 1 or
-                date.year                          LIKE '%${searchText}%' or
-                date.month                         LIKE '%${searchText}%' or
-                date.day                           LIKE '%${searchText}%' or
-                array_to_string(format, ' ')       LIKE '%${searchText}%' or
-                page_count                         LIKE '%${searchText}%' or
-                array_to_string(keywords, ' ')     LIKE '%${searchText}%' or
-                array_to_string(is_also, ' ')      LIKE '%${searchText}%' or
-                array_to_string(obsoletes, ' ')    LIKE '%${searchText}%' or
-                array_to_string(obsoleted_by, ' ') LIKE '%${searchText}%' or
-                array_to_string(updates, ' ')      LIKE '%${searchText}%' or
-                array_to_string(updated_by, ' ')   LIKE '%${searchText}%' or
-                array_to_string(see_also, ' ')     LIKE '%${searchText}%' or
-                array_to_string(refers, ' ')       LIKE '%${searchText}%' or
-                array_to_string(referred_by, ' ')  LIKE '%${searchText}%' or
-                abstract                           LIKE '%${searchText}%' or
-                draft                              LIKE '%${searchText}%' or
-                current_status                     LIKE '%${searchText}%' or
-                publication_status                 LIKE '%${searchText}%' or
-                stream                             LIKE '%${searchText}%' or
-                errata_url                         LIKE '%${searchText}%' or
-                area                               LIKE '%${searchText}%' or
-                wg_acronym                         LIKE '%${searchText}%' or
-                doi                                LIKE '%${searchText}%'
+                date.year                           LIKE '%${searchText}%' or
+                date.month                          LIKE '%${searchText}%' or
+                date.day                            LIKE '%${searchText}%' or
+                array_to_string(format, ' ')        LIKE '%${searchText}%' or
+                page_count                          LIKE '%${searchText}%' or
+                array_to_string(keywords, ' ')      LIKE '%${searchText}%' or
+                array_to_string(is_also, ' ')       LIKE '%${searchText}%' or
+                array_to_string(obsoletes, ' ')     LIKE '%${searchText}%' or
+                array_to_string(obsoleted_by, ' ')  LIKE '%${searchText}%' or
+                array_to_string(updates, ' ')       LIKE '%${searchText}%' or
+                array_to_string(updated_by, ' ')    LIKE '%${searchText}%' or
+                array_to_string(see_also, ' ')      LIKE '%${searchText}%' or
+                array_to_string("references", ' ')  LIKE '%${searchText}%' or
+                array_to_string(referenced_by, ' ') LIKE '%${searchText}%' or
+                abstract                            LIKE '%${searchText}%' or
+                draft                               LIKE '%${searchText}%' or
+                current_status                      LIKE '%${searchText}%' or
+                publication_status                  LIKE '%${searchText}%' or
+                stream                              LIKE '%${searchText}%' or
+                errata_url                          LIKE '%${searchText}%' or
+                area                                LIKE '%${searchText}%' or
+                wg_acronym                          LIKE '%${searchText}%' or
+                doi                                 LIKE '%${searchText}%'
             ORDER BY doc_id DESC
             LIMIT ${limit}
             OFFSET ${offset};`;
@@ -390,7 +390,12 @@ export default function Table(_: Props) {
               onChange={onSearchTextValueChanged}
             ></input>
             <span className="toolbar-total py-2 px-4">
-              Showing {(condition.CurrentPage - 1) * 100 + 1} - {condition.CurrentPage * 100 > result?.Total ? result?.Total : condition.CurrentPage * 100} of {result?.Total}
+              {result?.Total > 0 && (
+                <>
+                  Showing {(condition.CurrentPage - 1) * 100 + 1} - {condition.CurrentPage * 100 > result?.Total ? result?.Total : condition.CurrentPage * 100} of {result?.Total}
+                </>
+              )}
+              {result?.Total == 0 && <>No data</>}
             </span>
             {/* '<' */}
             {condition.CurrentPage > 1 && (
@@ -471,8 +476,8 @@ export default function Table(_: Props) {
                   <th>Updates</th>
                   <th>Updated By</th>
                   <th>See Also</th>
-                  <th>Refers</th>
-                  <th>Referred By</th>
+                  <th>References</th>
+                  <th>Referenced By</th>
                   <th>Abstract</th>
                   <th>Draft</th>
                   <th>Current Status</th>
@@ -672,9 +677,9 @@ export default function Table(_: Props) {
                         })}
                     </td>
                     <td>
-                      {!!row.refers &&
-                        Array.from(row.refers)?.map((item, index) => {
-                          const isNotLast = row.refers.length != index + 1;
+                      {!!row.references &&
+                        Array.from(row.references)?.map((item, index) => {
+                          const isNotLast = row.references.length != index + 1;
                           return (
                             <>
                               {item.startsWith("RFC") && (
@@ -694,9 +699,9 @@ export default function Table(_: Props) {
                         })}
                     </td>
                     <td>
-                      {!!row.referred_by &&
-                        Array.from(row.referred_by)?.map((item, index) => {
-                          const isNotLast = row.referred_by.length != index + 1;
+                      {!!row.referenced_by &&
+                        Array.from(row.referenced_by)?.map((item, index) => {
+                          const isNotLast = row.referenced_by.length != index + 1;
                           return (
                             <>
                               {item.startsWith("RFC") && (

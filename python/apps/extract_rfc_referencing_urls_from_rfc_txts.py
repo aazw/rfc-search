@@ -1,4 +1,5 @@
 import sys
+import os
 import io
 import logging
 import json
@@ -27,35 +28,42 @@ appLogger.addHandler(handler)
 @click.command()
 @click.option("--url", type=str, default="https://www.rfc-editor.org/in-notes/tar/RFC-all.zip", required=False, show_default=True, help="各RFC本文を取得するURLで、基本変更しない")
 @click.option("--zipfile", type=str, default=None, required=False, help="各RFC本文をURLから取得せずローカルのファイルを参照する場合に利用する")
-@click.option("--output", type=str, default=None, required=False, help="各RFCから他RFCへの参照URLの抽出結果を出力するファイル")
-def main(
-    url: str,
-    zipfile: str,
-    output: str,
-):
+@click.option("--file", type=str, default=None, required=False, help="各RFCから他RFCへの参照URLの抽出結果を出力するファイル")
+@click.option("--verbose", is_flag=True, show_default=True, default=False, help="")
+def main(url: str, zipfile: str, file: str, verbose: bool):
     appLogger.info(f"app start")
-    appLogger.info(f"command line argument: url = {url}")
-    appLogger.info(f"command line argument: zipfile = {zipfile}")
-    appLogger.info(f"command line argument: output = {output}")
+    appLogger.info(f"command line argument: --url = {url}")
+    appLogger.info(f"command line argument: --zipfile = {zipfile}")
+    appLogger.info(f"command line argument: --file = {file}")
+    appLogger.info(f"command line argument: --verbose = {verbose}")
 
     input_zip: ZipFile = None
     try:
         if zipfile:
-            input_zip = ZipFile(zipfile)
+            abspath = os.path.abspath(zipfile)
+            appLogger.info(f"zipfile importing from the zip file: file={zipfile} filepath={abspath}")
+
+            input_zip = ZipFile(abspath)
+            appLogger.info(f"zipfile imported from the zip file: file={zipfile} filepath={abspath}")
         else:
+            appLogger.info(f"zipfile importing from internet: url={url}")
+
             resp: requests.Response = requests.get(url)
             resp.raise_for_status()
 
             # https://stackoverflow.com/questions/10908877/extracting-a-zipfile-to-memory
             # https://qiita.com/nujust/items/9cb4564e712720549bc1
             input_zip = ZipFile(io.BytesIO(resp.content))
+            appLogger.info(f"zipfile imported from internet: url={url}")
 
     except Exception as e:
         appLogger.error(e)
-        appLogger.error("zip file can not be loaded")
+        appLogger.error("zipfile can not be loaded")
         sys.exit(-1)
 
-    # ファイル名がrfxXXX.txtなもののみ
+    appLogger.info(f"rfc referencing urls extracting")
+
+    # ファイル名がrfcXXX.txtなもののみ
     # .txtで終わる、という判定だけだと、一部RFCドキュメントではないものも混じるため
     filename_matcher = re.compile(r"^(rfc|RFC)[0-9]+\.(txt|TXT)$")
 
@@ -92,7 +100,7 @@ def main(
     # * http://www.ietf.org/rfc/rfc2780.txt
     url_pattern3 = re.compile(r"(https?://((www|tools)\.)?ietf\.org/(rfc|html)/(rfc|ien/ien)[0-9]+(\.txt)?)")
 
-    referencesMap: dict = {}
+    referencingURLsMap: dict = {}
 
     for name in input_zip.namelist():
         if filename_matcher.fullmatch(name):
@@ -100,7 +108,8 @@ def main(
             zip_content: bytes = input_zip.read(name)
             try:
                 doc_id = name[:-4].upper()
-                appLogger.info(f"doc_id: {doc_id}")
+                if verbose:
+                    appLogger.info(f"doc_id: {doc_id}")
 
                 # https://qiita.com/kojix2/items/e038de99d8a1aa3c4ba4
                 # https://docs.python.org/ja/3/library/stdtypes.html#bytes.decode
@@ -135,27 +144,35 @@ def main(
                         urls = url_pattern2.findall(extract_url)
                         if len(urls) > 0:
                             extract_url = urls[0][0]
-                            appLogger.info(f"* {extract_url}")
+                            if verbose:
+                                appLogger.info(f"* {extract_url}")
                             result.add(extract_url)
 
                         # RFC参照URLパターン2
                         urls = url_pattern3.findall(extract_url)
                         if len(urls) > 0:
                             extract_url = urls[0][0]
-                            appLogger.info(f"* {extract_url}")
+                            if verbose:
+                                appLogger.info(f"* {extract_url}")
                             result.add(extract_url)
 
-                referencesMap[doc_id] = list(result)
+                referencingURLsMap[doc_id] = list(result)
 
             except Exception as e:
                 appLogger.error(e)
-                appLogger.error(f"read rfc error: file={name}")
+                appLogger.error(f"rfc extract error: file={name}")
                 sys.exit(-1)
 
-    if output:
-        if output.endswith(".json"):
-            with open(output, mode="w") as f:
-                f.write(json.dumps(referencesMap, indent=4))
+    appLogger.info(f"rfc referencing urls extracted")
+
+    if file:
+        abspath = os.path.abspath(file)
+        with open(abspath, mode="w") as f:
+            appLogger.info(f"data exporting to the file: file={file} filepath={abspath}")
+
+            f.write(json.dumps(referencingURLsMap, indent=4))
+
+            appLogger.info(f"data exported to the file: file={file} filepath={abspath}")
 
     appLogger.info("app finished")
 

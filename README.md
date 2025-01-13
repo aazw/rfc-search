@@ -30,57 +30,56 @@ A web tool for easily searching and visualizing RFCs and their dependencies.
 ## Process to Build
 
 ```text
-  https://www.rfc-editor.org/rfc-index.xml           https://www.rfc-editor.org/in-notes/tar/RFC-all.zip
-                   +---+                                                    +---+
-                   |   |                                                    |   |
-                   |   |                                                    |   |
-                   |   | '--url https://...'                                |   | '--url https://...'
-                   v   |                                                    v   |
-+------------------------------------------+        +---------------------------------------------------+
-| python: python/apps/trasform_rfc_xmls.py |        | python: python/apps/extract_urls_from_rfc_txts.py |
-+------------------------------------------+        +---------------------------------------------------+
-                     |                                                        |      
-                     | '--output duckdb --file ./rfc.duckdb'                  | '--output ./rfc-reference-urls.json'
-                     v                                                        v      
-                 rfc.duckdb                                      rfc-reference-urls.json.json
-                     |                                                        |
-                     |                                                        |
-                     +---------------+                    +-------------------+
-                                     |                    |
-             '--dbfile ./rfc.duckdb' |                    | '--input ./rfc-reference-urls.json'
-                                     v                    v
-                 +---------------------------------------------------------------+
-                 | python: python/apps/add_references_to_duckdb_persistent_db.py |
-                 +---------------------------------------------------------------+
-                                               |
-                                               |
-                                               v
-                                           rfc.duckdb
-                                           (Overwrite)
-                                               |
-                                               |
-                                               v
-                          +---------------------------------------------+
-                          | cppy to rfc.duckdb to 'node/src/rfc.duckdb' |
-                          +---------------------------------------------+
-                                               |
-                                               |
-                                               v
-                                    +---------------------+
-                                    | vite: npm run build |
-                                    +---------------------+
-                                               |
-                                               |
-                                               v
-                                    generated to 'node/dict/'
-                                               |
-                                               |
-                    +--------------------------+--------------------------+
-                    |                                                     |
-                    |                                                     |
-                    v                                                     v
-+--------------------------------------+                           +--------------+
-|             GitHub Pages             |                           | Docker image |
-| (.github/workflows/deploy_pages.yml) |                           | (Dockerfile) |
-+--------------------------------------+                           +--------------+
+       https://www.rfc-editor.org/rfc-index.xml                      https://www.rfc-editor.org/in-notes/tar/RFC-all.zip
+                        +---+                                                               +---+
+                        |   |                                                               |   |
+                        |   |                                                               |   |
+                        |   | '--url https://...'                                           |   | '--url https://...'
+                        v   |                                                               v   |
++---------------------------------------------------+        +-------------------------------------------------------------------+
+| python: python/apps/trasform_rfc_index_to_json.py |        | python: python/apps/extract_rfc_referencing_urls_from_rfc_txts.py |
++---------------------------------------------------+        +-------------------------------------------------------------------+
+                          |                                                                   |      
+                          | '--file ./rfx-index.json'                                         | '--output ./rfc-referencing-urls.json'
+                          v                                                                   v      
+                   rfx-index.json                                                  rfc-referencing-urls.json
+                          |                                                                   |
+                          |                                                                   |
+                          +---------------+                               +-------------------+
+                                          |                               |
+              '--dbfile ./rfx-index.json' |                               | '--input ./rfc-referencing-urls.json'
+                                          v                               v
+                               +----------------------------------------------------+
+                               | python: python/apps/create_duckdb_persistent_db.py |
+                               +----------------------------------------------------+
+                                                          |
+                                                          |
+                                                          v
+                                                      rfc.duckdb
+                                                          |
+                                                          |
+                                                          v
+                                     +---------------------------------------------+
+                                     | cppy to rfc.duckdb to 'node/src/rfc.duckdb' |
+                                     +---------------------------------------------+
+                                                          |
+                                                          |
+                                                          v
+                                               +---------------------+
+                                               | vite: npm run build |
+                                               +---------------------+
+                                                          |
+                                                          |
+                                                          v
+                                               generated to 'node/dict/'
+                                                          |
+                                                          |
+                               +--------------------------+--------------------------+
+                               |                                                     |
+                               |                                                     |
+                               v                                                     v
+           +--------------------------------------+                           +--------------+
+           |             GitHub Pages             |                           | Docker image |
+           | (.github/workflows/deploy_pages.yml) |                           | (Dockerfile) |
+           +--------------------------------------+                           +--------------+
 ```

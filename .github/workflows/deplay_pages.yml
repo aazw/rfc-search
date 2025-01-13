@@ -46,9 +46,9 @@ jobs:
       - name: Build DuckDB Persistent Database
         run: |
           cd python
-          python apps/trasform_rfc_xmls.py --output duckdb --file ./rfc.duckdb
-          python apps/extract_urls_from_rfc_txts.py --output ./rfc-reference-urls.json
-          python apps/add_references_to_duckdb_persistent_db.py --dbfile ./rfc.duckdb --input ./rfc-reference-urls.json
+          python apps/trasform_rfc_index_to_json.py --file ./rfx-index.json
+          python apps/extract_rfc_referencing_urls_from_rfc_txts.py --output ./rfc-referencing-urls.json
+          python apps/create_duckdb_persistent_db.py --dbfile ./rfc.duckdb --rfc-index ./rfc-index.json --rfc-referencing-urls ./rfc-referencing-urls.json
       - name: Copy DuckDB Persistent Database
         run:  cp python/rfc.duckdb node/src/rfc.duckdb
       - name: Build with Vite

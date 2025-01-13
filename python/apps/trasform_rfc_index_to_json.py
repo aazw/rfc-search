@@ -2,14 +2,11 @@ import os
 import sys
 import logging
 import json
-import re
 
 import xml.etree.ElementTree as ET
 
 import click
 import requests
-import duckdb
-import pandas as pd
 
 
 # Making Python loggers output all messages to stdout in addition to log file
@@ -25,34 +22,33 @@ appLogger.setLevel(logging.INFO)
 appLogger.addHandler(handler)
 
 
-def remove_zerofill(doc_id: str):
-    return re.sub(r"^RFC0+", "RFC", doc_id)
-
-
 @click.command()
 @click.option("--url", type=str, default="https://www.rfc-editor.org/rfc-index.xml", required=False, show_default=True, help="XMLを取得するURLで、基本変更しない")
-@click.option("--output", type=click.Choice(["stdout", "file", "duckdb"], case_sensitive=False), default="stdout", help="取得結果を出力するファイルフォーマット")
-@click.option("--file", type=str, required=False, default=None, help="取得結果がファイルの場合の出力先")
-@click.option("--prettyprint", is_flag=True, show_default=True, default=False, help="出力がstdoutかfileの場合、Pretty PrintなJSONで出力するかどうか")
-def main(url: str, output: str, file: str, prettyprint: bool):
+@click.option("-f", "--file", type=str, required=False, default=None, help="取得結果がファイルの場合の出力先")
+@click.option("-pp", "--pretty-print", is_flag=True, show_default=True, default=False, help="出力がstdoutかfileの場合、Pretty PrintなJSONで出力するかどうか")
+def main(url: str, file: str, pretty_print: bool):
     appLogger.info(f"app start")
-    appLogger.info(f"command line argument: url = {url}")
-    appLogger.info(f"command line argument: output = {output}")
-    appLogger.info(f"command line argument: file = {file}")
-    appLogger.info(f"command line argument: prettyprint = {prettyprint}")
+    appLogger.info(f"command line argument: --url = {url}")
+    appLogger.info(f"command line argument: --file = {file}")
+    appLogger.info(f"command line argument: --pretty-print = {pretty_print}")
 
-    if output == "file" or output == "duckdb":
-        if not file:
-            appLogger.error("filename required")
+    if file:
+        abspath = os.path.abspath(file)
+        dirpath = os.path.dirname(abspath)
+        if not os.path.exists(dirpath):
+            appLogger.error(f"directory not found: path={file} directory={dirpath}")
             sys.exit(-1)
-        if not os.path.exists(os.path.dirname(file)):
-            appLogger.error("invalid filename error")
-            sys.exit(-1)
+
+    # RFC Indexの取得
+    appLogger.info(f"rfc index importing from internet: url={url}")
 
     resp = requests.get(url)
     resp.raise_for_status()
 
+    # RFC IndexをElement Treeで読み込む
     root = ET.fromstring(resp.text)
+    appLogger.info(f"rfc index imported from internet: url={url}")
+
     namespaces = {
         "": "https://www.rfc-editor.org/rfc-index",
         "xsi": "http://www.w3.org/2001/XMLSchema-instance",
@@ -338,21 +334,19 @@ def main(url: str, output: str, file: str, prettyprint: bool):
         doi = getattr(doi_entry, "text", None)
 
         rfc_entry = {
-            "doc_id": remove_zerofill(doc_id),
+            "doc_id": doc_id,
             "title": title,
             "author": author,
             "date": date,
             "format": format,
             "page_count": page_count,
             "keywords": keywords,
-            "is_also": [remove_zerofill(item) for item in is_also] if is_also else is_also,
-            "obsoletes": [remove_zerofill(item) for item in obsoletes] if obsoletes else obsoletes,
-            "obsoleted_by": [remove_zerofill(item) for item in obsoleted_by] if obsoleted_by else obsoleted_by,
-            "updates": [remove_zerofill(item) for item in updates] if updates else updates,
-            "updated_by": [remove_zerofill(item) for item in updated_by] if updated_by else updated_by,
-            "see_also": [remove_zerofill(item) for item in see_also] if see_also else see_also,
-            "refers": None,
-            "referred_by": None,
+            "is_also": is_also,
+            "obsoletes": obsoletes,
+            "obsoleted_by": obsoleted_by,
+            "updates": updates,
+            "updated_by": updated_by,
+            "see_also": see_also,
             "abstract": abstract,
             "draft": draft,
             "current_status": current_status,
@@ -366,70 +360,24 @@ def main(url: str, output: str, file: str, prettyprint: bool):
 
         rfc_entries.append(rfc_entry)
 
-    if output == "stdout":
-        if prettyprint:
-            print(json.dumps(rfc_entries, indent=4))
-        else:
-            print(rfc_entries)
+    if file:
+        # File
+        abspath = os.path.abspath(file)
+        with open(abspath, mode="w") as f:
+            appLogger.info(f"data exporting to the file: file={file} filepath={abspath}")
 
-    elif output == "file":
-        with open(file, mode="w") as f:
-            if prettyprint:
+            if pretty_print:
                 f.write(json.dumps(rfc_entries, indent=4))
             else:
                 f.write(json.dumps(rfc_entries))
 
-    elif output == "duckdb":
-        # database:
-        # * :memory:
-        # * rfc.duckdb
-        conn = duckdb.connect(database=file)
-        conn.execute(
-            """
-            CREATE TABLE rfc_entries (
-                doc_id              TEXT,
-                title               TEXT,
-                author              STRUCT(
-                                        name TEXT,
-                                        title TEXT
-                                    )[],
-                date                STRUCT(
-                                        day   TEXT,
-                                        month TEXT,
-                                        year  TEXT
-                                    ),
-                format              TEXT[],
-                page_count          TEXT,
-                keywords            TEXT[],
-                is_also             TEXT[],
-                obsoletes           TEXT[],
-                obsoleted_by        TEXT[],
-                updates             TEXT[],
-                updated_by          TEXT[],
-                see_also            TEXT[],
-                refers              TEXT[],
-                referred_by         TEXT[],
-                abstract            TEXT,
-                draft               TEXT,
-                current_status      TEXT,
-                publication_status  TEXT,    
-                stream              TEXT,
-                errata_url          TEXT,
-                area                TEXT,
-                wg_acronym          TEXT,
-                doi                 TEXT
-            );
-            """
-        )
-        df = pd.DataFrame(rfc_entries)
-
-        # DataFrameを使ってテーブルにINSERT
-        conn.register("temp_table", df)
-        conn.execute("INSERT INTO rfc_entries SELECT * FROM temp_table")
-
-        # データを確認
-        # result = conn.execute("SELECT * FROM rfc_entries").fetchall()
-        # print(result)
+            appLogger.info(f"data exported to the file: file={file} filepath={abspath}")
+    else:
+        # Stdout
+        if pretty_print:
+            print(json.dumps(rfc_entries, indent=4))
+        else:
+            print(rfc_entries)
 
     appLogger.info(f"app finished")
 

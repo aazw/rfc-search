@@ -80,13 +80,13 @@ command line argument: url = https://www.rfc-editor.org/rfc-index.xml
 
 
 # 再帰的にXMLの全パスを出力する
-def print_xml_paths(element, path="") -> set:
+def get_xml_paths(element, path="") -> set:
 
     current_path = f"{path}/{element.tag}"
     s = set([current_path])
 
     for child in element:
-        child_set = print_xml_paths(child, current_path)
+        child_set = get_xml_paths(child, current_path)
         s = s | child_set
 
     return s
@@ -96,14 +96,21 @@ def print_xml_paths(element, path="") -> set:
 @click.option("--url", type=str, default="https://www.rfc-editor.org/rfc-index.xml", help="RFC一覧のXML形式が取得できるエンドポイント")
 def main(url: str):
     appLogger.info(f"app start")
-    appLogger.info(f"command line argument: url = {url}")
+    appLogger.info(f"command line argument: --url = {url}")
+
+    # RFC Indexの取得
+    appLogger.info(f"rfc index importing from internet: url={url}")
 
     resp = requests.get(url)
     resp.raise_for_status()
 
     root = ET.fromstring(resp.text)
-    root_set = print_xml_paths(root)
+    appLogger.info(f"rfc index imported from internet: url={url}")
 
+    # XMLPathの再帰的な取得
+    root_set = get_xml_paths(root)
+
+    # XMLPathの出力
     for path in sorted(root_set):
         print(path)
 
