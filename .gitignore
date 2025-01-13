@@ -1,7 +1,14 @@
 python/*
 !python/requirements.txt
+!python/**/requirements.txt
 !python/*.py
+!python/**/*.py
 !python/*.md
+!python/**/*.md
+
+*.duckdb
+*.ddb
+*.db
 
 # Created by https://www.toptal.com/developers/gitignore/api/windows,macos,linux,node,python
 # Edit at https://www.toptal.com/developers/gitignore?templates=windows,macos,linux,node,python

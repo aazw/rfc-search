@@ -21,14 +21,20 @@ appLogger.addHandler(handler)
 
 @click.command()
 @click.option("--dbfile", type=str, required=True, default=None, help="")
-def main(dbfile: str):
+@click.option("--column", type=str, required=False, default=None, help="")
+def main(dbfile: str, column: str):
     appLogger.info(f"app start")
     appLogger.info(f"command line argument: dbfile = {dbfile}")
+    appLogger.info(f"command line argument: column = {column}")
 
-    con = duckdb.connect(dbfile)
-    con.table("rfc_entries").show()
+    conn = duckdb.connect(dbfile)
 
-    con.close()
+    if column:
+        conn.query(f"SELECT {column} FROM rfc_entries;").show()
+    else:
+        conn.table("rfc_entries").show()
+
+    conn.close()
 
     appLogger.info(f"app finished")
 

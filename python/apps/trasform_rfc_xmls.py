@@ -2,6 +2,7 @@ import os
 import sys
 import logging
 import json
+import re
 
 import xml.etree.ElementTree as ET
 
@@ -24,10 +25,14 @@ appLogger.setLevel(logging.INFO)
 appLogger.addHandler(handler)
 
 
+def remove_zerofill(doc_id: str):
+    return re.sub(r"^RFC0+", "RFC", doc_id)
+
+
 @click.command()
 @click.option("--url", type=str, default="https://www.rfc-editor.org/rfc-index.xml", help="")
 @click.option("--output", type=click.Choice(["stdout", "file", "duckdb"], case_sensitive=False), default="stdout", help="")
-@click.option("--file", type=str, required=False, default=None, help="")
+@click.option("--file", type=str, required=False, default=None, help="file to output")
 @click.option("--prettyprint", is_flag=True, show_default=True, default=False, help="")
 def main(url: str, output: str, file: str, prettyprint: bool):
     appLogger.info(f"app start")
@@ -333,20 +338,22 @@ def main(url: str, output: str, file: str, prettyprint: bool):
         doi = getattr(doi_entry, "text", None)
 
         rfc_entry = {
-            "doc_id": doc_id,
+            "doc_id": remove_zerofill(doc_id),
             "title": title,
             "author": author,
             "date": date,
             "format": format,
             "page_count": page_count,
             "keywords": keywords,
-            "is_also": is_also,
-            "obsoletes": obsoletes,
-            "obsoleted_by": obsoleted_by,
-            "updates": updates,
-            "updated_by": updated_by,
+            "is_also": [remove_zerofill(item) for item in is_also] if is_also else is_also,
+            "obsoletes": [remove_zerofill(item) for item in obsoletes] if obsoletes else obsoletes,
+            "obsoleted_by": [remove_zerofill(item) for item in obsoleted_by] if obsoleted_by else obsoleted_by,
+            "updates": [remove_zerofill(item) for item in updates] if updates else updates,
+            "updated_by": [remove_zerofill(item) for item in updated_by] if updated_by else updated_by,
+            "see_also": [remove_zerofill(item) for item in see_also] if see_also else see_also,
+            "refers": None,
+            "referred_by": None,
             "abstract": abstract,
-            "see_also": see_also,
             "draft": draft,
             "current_status": current_status,
             "publication_status": publication_status,
@@ -399,8 +406,10 @@ def main(url: str, output: str, file: str, prettyprint: bool):
                 obsoleted_by        TEXT[],
                 updates             TEXT[],
                 updated_by          TEXT[],
-                abstract            TEXT,
                 see_also            TEXT[],
+                refers              TEXT[],
+                referred_by         TEXT[],
+                abstract            TEXT,
                 draft               TEXT,
                 current_status      TEXT,
                 publication_status  TEXT,    
