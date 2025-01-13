@@ -40,20 +40,20 @@ A web tool for easily searching and visualizing RFCs and their dependencies.
 | python: python/apps/trasform_rfc_index_to_json.py |        | python: python/apps/extract_rfc_referencing_urls_from_rfc_txts.py |
 +---------------------------------------------------+        +-------------------------------------------------------------------+
                           |                                                                   |      
-                          | '--file ./rfc-index.json'                                         | '--output ./rfc-referencing-urls.json'
+                          | '--file ./rfc-index.json'                                         | '--file ./rfc-referencing-urls.json'
                           v                                                                   v      
                    rfc-index.json                                                  rfc-referencing-urls.json
                           |                                                                   |
                           |                                                                   |
                           +---------------+                               +-------------------+
                                           |                               |
-              '--dbfile ./rfc-index.json' |                               | '--input ./rfc-referencing-urls.json'
+           '--rfc-index ./rfc-index.json' |                               | '--rfc-referencing-urls ./rfc-referencing-urls.json'
                                           v                               v
                                +----------------------------------------------------+
                                | python: python/apps/create_duckdb_persistent_db.py |
                                +----------------------------------------------------+
                                                           |
-                                                          |
+                                                          | '--dbfile ./rfc.duckdb'
                                                           v
                                                       rfc.duckdb
                                                           |
