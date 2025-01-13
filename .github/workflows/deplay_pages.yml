@@ -13,6 +13,10 @@ concurrency:
   group: "pages"
   cancel-in-progress: false
 
+# 参考
+# * https://zenn.dev/kanakanho/articles/3a8b313e698b7f
+# * https://github.com/actions/setup-node
+# * https://github.com/actions/setup-python 
 jobs:
   build:
     runs-on: ubuntu-latest

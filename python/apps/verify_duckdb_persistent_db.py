@@ -40,4 +40,4 @@ def main(dbfile: str, column: str):
 
 
 if __name__ == "__main__":
-    main()
+    main(max_content_width=400)
