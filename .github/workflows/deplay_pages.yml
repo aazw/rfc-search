@@ -2,6 +2,13 @@ name: Deploy GitHub Pages
 on:
   push:
     branches: ["main"]
+  
+  # Cron job
+  schedule:
+    # every Monday
+    - cron: '0 0 * * 1' # UTC 00:00 = JTS 09:00
+
+  # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
 permissions:
