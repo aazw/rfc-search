@@ -265,6 +265,12 @@ def main(dbfile: str, rfc_index: str, rfc_referencing_urls: str, verbose: bool):
             references = rfcReferences.get(doc_id, None)
             referenced_by = rfcRerencedBy.get(doc_id, None)
 
+            if references:
+                references = sorted(references, key=lambda x: int(re.sub(r"^RFC0*", "", x)))
+
+            if referenced_by:
+                referenced_by = sorted(referenced_by, key=lambda x: int(re.sub(r"^RFC0*", "", x)))
+
             rfc_entries_nomalized.append(
                 {
                     "doc_id": doc_id,
