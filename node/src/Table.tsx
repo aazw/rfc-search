@@ -212,10 +212,10 @@ async function getRFCEntries({ db, searchText = "", limit = 100, offset = 0 }: G
   let total = -1;
   if (resultTotal.numRows > 0) {
     interface resultIF {
-      total: bigint;
+      total?: bigint;
     }
     const totalRow: resultIF | null | undefined = resultTotal.get(0)?.toJSON();
-    const totalNBigInt: bigint = totalRow?.total ?? 0;
+    const totalNBigInt: bigint = totalRow?.total ?? 0n;
     total = Number(totalNBigInt);
   }
   // console.log("total: ", total);
@@ -348,7 +348,7 @@ async function getRFCEntries({ db, searchText = "", limit = 100, offset = 0 }: G
 
   const resultEntries = await stmtEntries.query(...params);
 
-  const entries: RFCEntry[] = resultEntries.toArray().map((row) => row.toJSON());
+  const entries: RFCEntry[] | null = resultEntries.toArray();
   //   console.log("entries: ", records);
 
   await conn.close();
@@ -557,15 +557,16 @@ export default function Table() {
           <div className="relative flex grow ml-0 mr-0 mt-4">
             <div className="absolute w-full h-full px-4 overflow-hidden">
               <div className="h-full overflow-auto">
-                <table className="border-collapse border">
+                <table className="border-collapse border table-fixed">
                   <thead className="text-xs text-white bg-gray-700 uppercase">
                     <tr>
                       <th className="border border-white align-top text-left">Doc ID</th>
                       <th className="border border-white align-top text-left">Title</th>
                       <th className="border border-white align-top text-left">Author</th>
                       <th className="border border-white align-top text-left">Date</th>
-                      <th className="border border-white align-top text-left">Format</th>
+                      <th className="border border-white align-top text-left w-1/2">Abstract</th>
                       <th className="border border-white align-top text-left">Pages</th>
+                      <th className="border border-white align-top text-left">Format</th>
                       <th className="border border-white align-top text-left">Keywords</th>
                       <th className="border border-white align-top text-left">Is Also</th>
                       <th className="border border-white align-top text-left">Obsoletes</th>
@@ -575,7 +576,6 @@ export default function Table() {
                       <th className="border border-white align-top text-left">See Also</th>
                       <th className="border border-white align-top text-left">References</th>
                       <th className="border border-white align-top text-left">Referenced By</th>
-                      <th className="border border-white align-top text-left">Abstract</th>
                       <th className="border border-white align-top text-left">Draft</th>
                       <th className="border border-white align-top text-left">Current Status</th>
                       <th className="border border-white align-top text-left">Publication Status</th>
@@ -617,6 +617,8 @@ export default function Table() {
                         <td className="border border-white align-top text-left">
                           {row.date.year}/{convertMonthExpression(row.date.month)}
                         </td>
+                        <td className="border border-white align-top text-left">{row.abstract}</td>
+                        <td className="border border-white align-top text-left">{row.page_count}</td>
                         <td className="border border-white align-top text-left">
                           {!!row.format &&
                             Array.from(row.format)?.map((item, index) => {
@@ -630,7 +632,6 @@ export default function Table() {
                               );
                             })}
                         </td>
-                        <td className="border border-white align-top text-left">{row.page_count}</td>
                         <td className="border border-white align-top text-left">
                           {!!row.keywords &&
                             Array.from(row.keywords)?.map((item, index) => {
@@ -828,7 +829,6 @@ export default function Table() {
                               );
                             })}
                         </td>
-                        <td className="border border-white align-top text-left">{row.abstract}</td>
                         <td className="border border-white align-top text-left">{row.draft}</td>
                         <td className="border border-white align-top text-left">{row.current_status}</td>
                         <td className="border border-white align-top text-left">{row.publication_status}</td>
