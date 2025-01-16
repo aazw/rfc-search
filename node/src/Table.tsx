@@ -85,7 +85,7 @@ interface RFCEntry {
   doi: string;
 }
 
-async function initDuckDB(): Promise<duckdb.AsyncDuckDB> {
+async function initDuckDB(updateProgress: ((loaded: number) => void) | null = null): Promise<duckdb.AsyncDuckDB | null> {
   const MANUAL_BUNDLES: duckdb.DuckDBBundles = {
     mvp: {
       mainModule: duckdb_wasm,
@@ -107,7 +107,53 @@ async function initDuckDB(): Promise<duckdb.AsyncDuckDB> {
 
   const response = await fetch(dbUrl);
 
-  await db.registerFileBuffer("rfc_duckdb", new Uint8Array(await response.arrayBuffer()));
+  // 全体のコンテンツサイズを取得
+  const contentLength = response.headers.get("Content-Length");
+
+  if (response.body && contentLength) {
+    if (updateProgress) {
+      updateProgress(0);
+    }
+
+    // プログレスバーを表示する実装
+    const totalSize = parseInt(contentLength, 10);
+    let loadedSize = 0;
+
+    // 空の Uint8Array を作成してデータを保持
+    const arrayBuffer = new Uint8Array(totalSize);
+
+    // ストリームリーダーを取得
+    const reader = response.body.getReader();
+
+    // ArrayBuffer に書き込む位置を管理
+    let offset = 0;
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) {
+        break;
+      }
+
+      // 読み取ったデータを ArrayBuffer に書き込む
+      arrayBuffer.set(value, offset);
+      offset += value.length;
+
+      // プログレスを更新
+      loadedSize += value.length;
+
+      // updateProgress(loadedSize);
+      const percentage = (loadedSize / totalSize) * 100;
+      if (updateProgress) {
+        updateProgress(percentage);
+      }
+    }
+
+    await db.registerFileBuffer("rfc_duckdb", new Uint8Array(arrayBuffer));
+  } else {
+    // 通常の実装
+    await db.registerFileBuffer("rfc_duckdb", new Uint8Array(await response.arrayBuffer()));
+  }
+
+  // await db.registerFileBuffer("rfc_duckdb", new Uint8Array(await response.arrayBuffer()));
   await db.open({
     // これ必須
     path: "rfc_duckdb",
@@ -370,7 +416,9 @@ export default function Table() {
   // 第1引数: 初期値
   // 第1戻り値: 現在の値
   // 第2戻り値: 状態を変更する関数
-  //
+  // DuckDB Persistent Databaseのファイルのダウンロード状態
+  const [progress, updateProgress] = useState<number>(-1); // -1 is initial state, 0-100
+
   // DuckDB WASMのデータベースオブジェクト
   const [db, setDB] = useState<duckdb.AsyncDuckDB | null>(null);
 
@@ -384,7 +432,7 @@ export default function Table() {
   // 第2引数: 依存配列
   useEffect(() => {
     (async () => {
-      const db = await initDuckDB();
+      const db = await initDuckDB(updateProgress);
       setDB(db);
     })().catch((error) => {
       console.error(error);
@@ -454,7 +502,7 @@ export default function Table() {
     <>
       {result == null && (
         <>
-          <div className="mx-2">Now Loading...</div>
+          <div className="mx-2">Now Loading ... {progress > -1 && " " + progress.toFixed(2) + " %"}</div>
         </>
       )}
       {result != null && (
