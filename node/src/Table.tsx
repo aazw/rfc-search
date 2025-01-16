@@ -86,6 +86,10 @@ interface RFCEntry {
 }
 
 async function initDuckDB(updateProgress: ((loaded: number) => void) | null = null): Promise<duckdb.AsyncDuckDB | null> {
+  if (updateProgress) {
+    updateProgress(-1);
+  }
+
   const MANUAL_BUNDLES: duckdb.DuckDBBundles = {
     mvp: {
       mainModule: duckdb_wasm,
@@ -105,6 +109,7 @@ async function initDuckDB(updateProgress: ((loaded: number) => void) | null = nu
   const db = new duckdb.AsyncDuckDB(logger, worker);
   await db.instantiate(bundle.mainModule, bundle.pthreadWorker);
 
+  // ファイルを取得
   const response = await fetch(dbUrl);
 
   // 全体のコンテンツサイズを取得
@@ -416,8 +421,12 @@ export default function Table() {
   // 第1引数: 初期値
   // 第1戻り値: 現在の値
   // 第2戻り値: 状態を変更する関数
+
   // DuckDB Persistent Databaseのファイルのダウンロード状態
-  const [progress, updateProgress] = useState<number>(-1); // -1 is initial state, 0-100
+  // -2: : initial state
+  // -1 start fetching
+  // 0-100: loading
+  const [progress, updateProgress] = useState<number>(-2);
 
   // DuckDB WASMのデータベースオブジェクト
   const [db, setDB] = useState<duckdb.AsyncDuckDB | null>(null);
@@ -502,7 +511,9 @@ export default function Table() {
     <>
       {result == null && (
         <>
-          <div className="mx-2">Now Loading ... {progress > -1 && " " + progress.toFixed(2) + " %"}</div>
+          {progress == -2 && <div className="mx-2">Before Loading</div>}
+          {progress == -1 && <div className="mx-2">Start Loading </div>}
+          {progress > -1 && <div className="mx-2">Now Loading ... {progress.toFixed(2)} %</div>}
         </>
       )}
       {result != null && (
