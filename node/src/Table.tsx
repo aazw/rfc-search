@@ -454,117 +454,119 @@ export default function Table() {
     <>
       {result == null && (
         <>
-          <div className="mx-4">Now Loading...</div>
+          <div className="mx-2">Now Loading...</div>
         </>
       )}
       {result != null && (
         <div className="flex flex-col h-full w-full">
-          <div className="toolbar flex-none flex flex-col lg:flex-row mx-4">
-            <div className="basis-full lg:grow">
+          <div className="flex-none flex flex-col lg:flex-row mx-2">
+            <div className="basis-full lg:grow lg:relative">
               <input
-                className="toolbar-input border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                className="border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                 type="text"
                 placeholder="Search"
                 onChange={onSearchTextValueChanged}
               ></input>
             </div>
-            <span className="basis-full lg:flex-none mt-2 lg:mt-0 py-2 lg:px-4 text-xs lg:text-base">
-              {result?.Total > 0 && (
-                <>
-                  Showing {(condition.CurrentPage - 1) * 100 + 1} - {condition.CurrentPage * 100 > result?.Total ? result?.Total : condition.CurrentPage * 100} of {result?.Total}
-                </>
-              )}
-              {result?.Total == 0 && <>No data</>}
-            </span>
-            <div className="basis-full lg:flex-none mt-2 lg:mt-0">
-              {/* '<' */}
-              {condition.CurrentPage > 1 && (
-                <button onClick={onPreviousPageButtonClicked} className="text-blue-600 bg-gray-300 hover:text-white hover:bg-blue-700 font-bold py-2 px-2 lg:px-4 rounded-l cursor-pointer">
-                  &lt;
-                </button>
-              )}
-              {condition.CurrentPage == 1 && (
-                <button onClick={onPreviousPageButtonClicked} className="text-blue-600 bg-gray-300 hover:text-white hover:bg-blue-700 font-bold py-2 px-2 lg:px-4 rounded-l cursor-not-allowed">
-                  &lt;
-                </button>
-              )}
-              {/* 1 */}
-              {condition.CurrentPage != 1 && (
-                <button className="text-blue-600 bg-gray-300 hover:text-white hover:bg-blue-700 font-bold py-2 px-2 lg:px-4 cursor-pointer" onClick={() => onSpecificPageButtonClicked(1)}>
-                  1
-                </button>
-              )}
-              {condition.CurrentPage == 1 && <button className="text-white bg-blue-500 hover:bg-blue-700 font-bold py-2 px-2 lg:px-4 cursor-not-allowed">1</button>}
-              {/* ... */}
-              {condition.CurrentPage >= 4 && (
-                <button disabled className="bg-gray-300 font-bold py-2 px-2 lg:px-4">
-                  ...
-                </button>
-              )}
-              {/* Previous Page (Current Page -1) */}
-              {condition.CurrentPage >= 3 && (
-                <button
-                  className="text-blue-600 bg-gray-300 hover:text-white hover:bg-blue-700 font-bold py-2 px-2 lg:px-4 cursor-pointer"
-                  onClick={() => onSpecificPageButtonClicked(condition.CurrentPage - 1)}
-                >
-                  {condition.CurrentPage - 1}
-                </button>
-              )}
-              {/* Current Page  */}
-              {condition.CurrentPage >= 2 && condition.CurrentPage <= getLastPage(result?.Total) - 1 && (
-                <button className="text-white bg-blue-500 hover:bg-blue-700 font-bold py-2 px-2 lg:px-4 cursor-not-allowed">{condition.CurrentPage}</button>
-              )}
-              {/* Next Page (Current Page + 1) */}
-              {condition.CurrentPage <= getLastPage(result?.Total) - 2 && (
-                <button
-                  className="text-blue-600 bg-gray-300 hover:text-white hover:bg-blue-700 font-bold py-2 px-2 lg:px-4 cursor-pointer"
-                  onClick={() => onSpecificPageButtonClicked(condition.CurrentPage + 1)}
-                >
-                  {condition.CurrentPage + 1}
-                </button>
-              )}
-              {/* ... */}
-              {condition.CurrentPage <= getLastPage(result?.Total) - 3 && (
-                <button disabled className="bg-gray-300 font-bold py-2 px-2 lg:px-4">
-                  ...
-                </button>
-              )}
-              {/* Last Page */}
-              {1 < getLastPage(result?.Total) && condition.CurrentPage != getLastPage(result?.Total) && (
-                <button
-                  className="text-blue-600 bg-gray-300 hover:text-white hover:bg-blue-700 font-bold py-2 px-2 lg:px-4 cursor-pointer"
-                  onClick={() => onSpecificPageButtonClicked(getLastPage(result?.Total))}
-                >
-                  {getLastPage(result?.Total)}
-                </button>
-              )}
-              {1 < getLastPage(result?.Total) && condition.CurrentPage == getLastPage(result?.Total) && (
-                <button className="text-white bg-blue-500 hover:bg-blue-700 font-bold py-2 px-2 lg:px-4 cursor-not-allowed">{getLastPage(result?.Total)}</button>
-              )}
-              {/* '>' */}
-              {condition.CurrentPage < getLastPage(result?.Total) && (
-                <button onClick={onNextPageButtonClicked} className="text-blue-600 bg-gray-300 hover:text-white hover:bg-blue-700 font-bold py-2 px-2 lg:px-4 rounded-r cursor-pointer">
-                  &gt;
-                </button>
-              )}
-              {condition.CurrentPage == getLastPage(result?.Total) && (
-                <button onClick={onNextPageButtonClicked} className="text-blue-600 bg-gray-300 hover:text-white hover:bg-blue-700 font-bold py-2 px-2 lg:px-4 rounded-r cursor-not-allowed">
-                  &gt;
-                </button>
-              )}
+            <div className="basis-full lg:basis-autolg:relative lg:flex-none flex flex-col lg:flex-row">
+              <span className="basis-full lg:basis-auto lg:flex-none mt-2 lg:mt-0 py-2 lg:px-4 text-xs lg:text-base">
+                {result?.Total > 0 && (
+                  <>
+                    Showing {(condition.CurrentPage - 1) * 100 + 1} - {condition.CurrentPage * 100 > result?.Total ? result?.Total : condition.CurrentPage * 100} of {result?.Total}
+                  </>
+                )}
+                {result?.Total == 0 && <>No data</>}
+              </span>
+              <div className="basis-full lg:basis-auto lg:grow-0 mt-2 lg:mt-0">
+                {/* '<' */}
+                {condition.CurrentPage > 1 && (
+                  <button onClick={onPreviousPageButtonClicked} className="text-blue-600 bg-gray-300 hover:text-white hover:bg-blue-700 font-bold py-2 px-2 lg:px-4 rounded-l cursor-pointer">
+                    &lt;
+                  </button>
+                )}
+                {condition.CurrentPage == 1 && (
+                  <button onClick={onPreviousPageButtonClicked} className="text-blue-600 bg-gray-300 hover:text-white hover:bg-blue-700 font-bold py-2 px-2 lg:px-4 rounded-l cursor-not-allowed">
+                    &lt;
+                  </button>
+                )}
+                {/* 1 */}
+                {condition.CurrentPage != 1 && (
+                  <button className="text-blue-600 bg-gray-300 hover:text-white hover:bg-blue-700 font-bold py-2 px-2 lg:px-4 cursor-pointer" onClick={() => onSpecificPageButtonClicked(1)}>
+                    1
+                  </button>
+                )}
+                {condition.CurrentPage == 1 && <button className="text-white bg-blue-500 hover:bg-blue-700 font-bold py-2 px-2 lg:px-4 cursor-not-allowed">1</button>}
+                {/* ... */}
+                {condition.CurrentPage >= 4 && (
+                  <button disabled className="bg-gray-300 font-bold py-2 px-2 lg:px-4">
+                    ...
+                  </button>
+                )}
+                {/* Previous Page (Current Page -1) */}
+                {condition.CurrentPage >= 3 && (
+                  <button
+                    className="text-blue-600 bg-gray-300 hover:text-white hover:bg-blue-700 font-bold py-2 px-2 lg:px-4 cursor-pointer"
+                    onClick={() => onSpecificPageButtonClicked(condition.CurrentPage - 1)}
+                  >
+                    {condition.CurrentPage - 1}
+                  </button>
+                )}
+                {/* Current Page  */}
+                {condition.CurrentPage >= 2 && condition.CurrentPage <= getLastPage(result?.Total) - 1 && (
+                  <button className="text-white bg-blue-500 hover:bg-blue-700 font-bold py-2 px-2 lg:px-4 cursor-not-allowed">{condition.CurrentPage}</button>
+                )}
+                {/* Next Page (Current Page + 1) */}
+                {condition.CurrentPage <= getLastPage(result?.Total) - 2 && (
+                  <button
+                    className="text-blue-600 bg-gray-300 hover:text-white hover:bg-blue-700 font-bold py-2 px-2 lg:px-4 cursor-pointer"
+                    onClick={() => onSpecificPageButtonClicked(condition.CurrentPage + 1)}
+                  >
+                    {condition.CurrentPage + 1}
+                  </button>
+                )}
+                {/* ... */}
+                {condition.CurrentPage <= getLastPage(result?.Total) - 3 && (
+                  <button disabled className="bg-gray-300 font-bold py-2 px-2 lg:px-4">
+                    ...
+                  </button>
+                )}
+                {/* Last Page */}
+                {1 < getLastPage(result?.Total) && condition.CurrentPage != getLastPage(result?.Total) && (
+                  <button
+                    className="text-blue-600 bg-gray-300 hover:text-white hover:bg-blue-700 font-bold py-2 px-2 lg:px-4 cursor-pointer"
+                    onClick={() => onSpecificPageButtonClicked(getLastPage(result?.Total))}
+                  >
+                    {getLastPage(result?.Total)}
+                  </button>
+                )}
+                {1 < getLastPage(result?.Total) && condition.CurrentPage == getLastPage(result?.Total) && (
+                  <button className="text-white bg-blue-500 hover:bg-blue-700 font-bold py-2 px-2 lg:px-4 cursor-not-allowed">{getLastPage(result?.Total)}</button>
+                )}
+                {/* '>' */}
+                {condition.CurrentPage < getLastPage(result?.Total) && (
+                  <button onClick={onNextPageButtonClicked} className="text-blue-600 bg-gray-300 hover:text-white hover:bg-blue-700 font-bold py-2 px-2 lg:px-4 rounded-r cursor-pointer">
+                    &gt;
+                  </button>
+                )}
+                {condition.CurrentPage == getLastPage(result?.Total) && (
+                  <button onClick={onNextPageButtonClicked} className="text-blue-600 bg-gray-300 hover:text-white hover:bg-blue-700 font-bold py-2 px-2 lg:px-4 rounded-r cursor-not-allowed">
+                    &gt;
+                  </button>
+                )}
+              </div>
             </div>
           </div>
           <div className="relative flex grow ml-0 mr-0 mt-4">
-            <div className="absolute w-full h-full px-4 overflow-hidden">
+            <div className="absolute w-full h-full px-2 overflow-hidden">
               <div className="h-full overflow-auto">
                 <table className="border-collapse border table-fixed">
                   <thead className="text-xs text-white bg-gray-700 uppercase">
                     <tr>
                       <th className="border border-white align-top text-left">Doc ID</th>
-                      <th className="border border-white align-top text-left">Title</th>
+                      <th className="border border-white align-top text-left min-w-60">Title</th>
                       <th className="border border-white align-top text-left">Author</th>
                       <th className="border border-white align-top text-left">Date</th>
-                      <th className="border border-white align-top text-left w-1/2">Abstract</th>
+                      <th className="border border-white align-top text-left min-w-80">Abstract</th>
                       <th className="border border-white align-top text-left">Pages</th>
                       <th className="border border-white align-top text-left">Format</th>
                       <th className="border border-white align-top text-left">Keywords</th>
