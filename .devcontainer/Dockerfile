@@ -26,6 +26,9 @@ ARG NPM_RENOVATE_VERSION=40.48.4
 ARG PIP_PIP_VERSION=25.1.1
 ARG PIP_UV_VERSION=0.7.12
 
+# for other tools
+ARG OTHER_DUCKDB_VERSION=1.3.0
+
 # ##########################################################################################
 # builder images
 # ##########################################################################################
@@ -111,6 +114,17 @@ RUN yarn global add prettier@${NPM_PRETTIER_VERSION}
 # https://www.npmjs.com/package/renovate
 ARG NPM_RENOVATE_VERSION
 RUN yarn global add renovate@${NPM_RENOVATE_VERSION}
+
+# Duckdb
+# https://github.com/duckdb/duckdb
+# https://duckdb.org/docs/stable/
+# https://duckdb.org/docs/installation/?version=stable&environment=cli&platform=linux&download_method=direct&architecture=arm64
+ARG OTHER_DUCKDB_VERSION
+RUN curl -fsSL -o /duckdb_cli.zip https://github.com/duckdb/duckdb/releases/download/v1.3.0/duckdb_cli-linux-$(uname -m | sed 's/aarch64/arm64/' | sed 's/x86_64/amd64/').zip \
+    && unzip /duckdb_cli.zip \
+    && chmod +x duckdb \
+    && mv duckdb /usr/local/bin/ \
+    && rm /duckdb_cli.zip
 
 # Install Python
 RUN apt-get -y install python3 python3-pip python3-venv python-is-python3

@@ -69,6 +69,15 @@
       "datasourceTemplate": "pypi",
       "depNameTemplate": "uv",
       "versioningTemplate": "pep440"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": ["/^\\.devcontainer\\/Dockerfile$/"],
+      "matchStringsStrategy": "any",
+      "matchStrings": ["ARG\\s+OTHER_DUCKDB_VERSION=(?<currentValue>\\S+)"],
+      "datasourceTemplate": "github-tags",
+      "depNameTemplate": "duckdb/duckdb",
+      "versioningTemplate": "semver-coerced"
     }
   ],
   "packageRules": [
@@ -82,11 +91,19 @@
     },
     {
       "matchFileNames": [
-        "**/pyproject.toml",
-        "**/.python-version",
-        "**/uv.lock"
+        "python/pyproject.toml",
+        "python/.python-version",
+        "python/uv.lock"
       ],
       "groupName": "python"
+    },
+    {
+      "matchFileNames": [
+        "node/package.json",
+        "node/package-lock.json",
+        "node/yarn.lock"
+      ],
+      "groupName": "node"
     }
   ]
 }
