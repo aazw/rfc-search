@@ -22,6 +22,10 @@ ARG GO_GO_TASK_VERSION=v3.43.3
 ARG NPM_PRETTIER_VERSION=3.5.3
 ARG NPM_RENOVATE_VERSION=40.48.4
 
+# for pip tools
+ARG PIP_PIP_VERSION=25.1.1
+ARG PIP_UV_VERSION=0.7.12
+
 # ##########################################################################################
 # builder images
 # ##########################################################################################
@@ -110,8 +114,6 @@ RUN yarn global add renovate@${NPM_RENOVATE_VERSION}
 
 # Install Python
 RUN apt-get -y install python3 python3-pip python3-venv python-is-python3
-RUN python3 -m venv /venv
-ENV PATH=/venv/bin/:$PATH
 
 # change default user from 'node' to 'vscode'
 ARG USERNAME=vscode
@@ -122,3 +124,18 @@ RUN usermod -l $USERNAME -d /home/$USERNAME -m node \
     && echo $USERNAME ALL=\(root\) NOPASSWD:ALL >/etc/sudoers.d/$USERNAME \
     && chmod 0440 /etc/sudoers.d/$USERNAME
 USER $USERNAME
+
+# python venv
+RUN python3 -m venv /home/vscode/.local/
+ENV PATH=/home/vscode/.local/bin:$PATH
+
+# pip
+# https://pypi.org/project/pip/
+ARG PIP_PIP_VERSION
+RUN pip install --upgrade pip==${PIP_PIP_VERSION}
+
+# uv
+# https://github.com/astral-sh/uv
+# https://pypi.org/project/uv/
+ARG PIP_UV_VERSION
+RUN pip install uv==${PIP_UV_VERSION}
