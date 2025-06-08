@@ -16,3 +16,9 @@ tasks:
     cmds:
       - ./scripts/remove_ds_store.sh
     silent: true
+
+  uv_sync:
+    dir: "{{ .TASKFILE_DIR }}/python"
+    cmds:
+      - uv sync --link-mode=copy
+    silent: true
