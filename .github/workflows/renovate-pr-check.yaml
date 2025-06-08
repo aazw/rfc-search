@@ -1,0 +1,114 @@
+# .github/workflows/renovate-pr-check.yml
+name: "Check Renovate Pull Request"
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches: [main, master]
+    paths:
+      - "renovate.json"
+
+permissions:
+  contents: write # push に必要
+
+jobs:
+  detect-changes:
+    if: github.actor == 'renovate[bot]' || github.actor == 'renovate-bot'
+    runs-on: ubuntu-latest
+    outputs:
+      node_files: ${{ steps.filter.outputs.node_files }}
+      renovate_json_file: ${{ steps.filter.outputs.renovate_json_file }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          filters: |
+            node_files:
+              - "node/package.json"
+              - "node/package-lock.json"
+            renovate_json_file:
+              - 'renovate.json'
+
+  node-build-check:
+    needs:
+      - detect-changes
+    if: needs.detect-changes.outputs.node_files == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Setup npm
+        run: |
+          cd node
+          npm install
+      - name: Build with Vite
+        run: |
+          cd node
+          npm run build
+      - name: Commit and push changes if needed
+        run: |
+          if [[ -n "$(git status --porcelain)" ]]; then
+            git config user.name  "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            
+            # 1. 変更をコミット
+            git commit -am "chore: normalize npm modules after Renovate PR"
+
+            # 2. 最新リモートを取得してリベース（競合時に備えautostash）
+            git pull --rebase --autostash origin "$GITHUB_HEAD_REF"
+
+            # 3. リベース結果を force-with-lease で安全に push
+            git push --force-with-lease origin HEAD:"$GITHUB_HEAD_REF"
+          else
+            echo "No changes to commit."
+          fi
+
+  format-renovate-json:
+    needs:
+      - detect-changes
+      - node-build-check
+    if: always() && needs.detect-changes.outputs.renovate_json_file == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Format renovate.json
+        run: npx --yes prettier -w renovate.json
+      - name: Commit and push changes if needed
+        run: |
+          if [[ -n "$(git status --porcelain)" ]]; then
+            git config user.name  "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            
+            # 1. 変更をコミット
+            git commit -am "chore: format renovate.json"
+
+            # 2. 最新リモートを取得してリベース（競合時に備えautostash）
+            git pull --rebase --autostash origin "$GITHUB_HEAD_REF"
+
+            # 3. リベース結果を force-with-lease で安全に push
+            git push --force-with-lease origin HEAD:"$GITHUB_HEAD_REF"
+          else
+            echo "No changes to commit."
+          fi
