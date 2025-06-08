@@ -1,38 +1,38 @@
 {
-	"name": "vsc-rfc-search",
-	"build": {
-		"dockerfile": "Dockerfile"
-	},
-	"features": {},
-	"forwardPorts": [],
-	"customizations": {
-		"vscode": {
-			"extensions": [
-				"ms-azuretools.vscode-docker",
-				"ms-python.python",
-				"ms-python.black-formatter",
-				"ms-python.isort",
-				"dbaeumer.vscode-eslint",
-				"esbenp.prettier-vscode",
-				"bradlc.vscode-tailwindcss"
-			]
-		}
-	},
-	"remoteUser": "root",
-	"mounts": [
-		{
-			"type": "bind",
-			"source": "/var/run/docker.sock",
-			"target": "/var/run/docker.sock"
-		}
-	],
-	"remoteEnv": {
-		"LOCAL_WORKSPACE_FOLDER": "${localWorkspaceFolder}"
-	},
-	"runArgs": [
-		"--name",
-		"vsc-rfc-search",
-		"--add-host",
-		"host.docker.internal:host-gateway"
-	]
+  "name": "vsc-rfc-search",
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
+  "features": {
+    "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {}
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "emeraldwalk.runonsave",
+        "ms-azuretools.vscode-containers",
+        "ms-azuretools.vscode-docker",
+        "ms-python.python",
+        "ms-python.black-formatter",
+        "ms-python.isort",
+        "tamasfe.even-better-toml",
+        "dbaeumer.vscode-eslint",
+        "bradlc.vscode-tailwindcss"
+      ],
+      "settings": {
+        "terminal.integrated.defaultProfile.linux": "bash"
+      }
+    }
+  },
+  "remoteUser": "vscode",
+  "remoteEnv": {
+    "LOCAL_WORKSPACE_FOLDER": "${localWorkspaceFolder}",
+    "TZ": "Asia/Tokyo"
+  },
+  "runArgs": [
+    "--name",
+    "vsc-rfc-search",
+    "--add-host",
+    "host.docker.internal:host-gateway"
+  ]
 }

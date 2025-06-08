@@ -2,11 +2,11 @@ name: Deploy GitHub Pages
 on:
   push:
     branches: ["main"]
-  
+
   # Cron job
   schedule:
     # every Monday
-    - cron: '0 0 * * 1' # UTC 00:00 = JTS 09:00
+    - cron: "0 0 * * 1" # UTC 00:00 = JTS 09:00
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -23,7 +23,7 @@ concurrency:
 # 参考
 # * https://zenn.dev/kanakanho/articles/3a8b313e698b7f
 # * https://github.com/actions/setup-node
-# * https://github.com/actions/setup-python 
+# * https://github.com/actions/setup-python
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -33,11 +33,11 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.11' 
-          cache: 'pip'
-          cache-dependency-path: '**/requirements.txt'
+          python-version: "3.11"
+          cache: "pip"
+          cache-dependency-path: "**/requirements.txt"
       - name: Setup pip
-        run:  |
+        run: |
           cd python 
           pip install -r requirements.txt
       - name: Setup Node
@@ -45,7 +45,7 @@ jobs:
         with:
           node-version: 22
           cache: npm
-          cache-dependency-path: '**/package-lock.json'
+          cache-dependency-path: "**/package-lock.json"
       - name: Setup npm
         run: |
           cd node
@@ -57,7 +57,7 @@ jobs:
           python apps/extract_rfc_referencing_urls_from_rfc_txts.py --file ./rfc-referencing-urls.json
           python apps/create_duckdb_persistent_db.py --dbfile ./rfc.duckdb --rfc-index ./rfc-index.json --rfc-referencing-urls ./rfc-referencing-urls.json
       - name: Copy DuckDB Persistent Database
-        run:  cp python/rfc.duckdb node/src/rfc.duckdb
+        run: cp python/rfc.duckdb node/src/rfc.duckdb
       - name: Build with Vite
         run: |
           cd node
@@ -67,7 +67,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: 'node/dist/'
+          path: "node/dist/"
 
   deploy:
     runs-on: ubuntu-latest
@@ -76,6 +76,6 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-    - name: Deploy to GitHub Pages
-      id: deployment
-      uses: actions/deploy-pages@v4
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

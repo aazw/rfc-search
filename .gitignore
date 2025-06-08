@@ -5,8 +5,8 @@
 python/*.json
 python/**/*.json
 
-# Created by https://www.toptal.com/developers/gitignore/api/windows,macos,linux,node,python
-# Edit at https://www.toptal.com/developers/gitignore?templates=windows,macos,linux,node,python
+# Created by https://www.toptal.com/developers/gitignore/api/node,linux,macos,python,windows,react
+# Edit at https://www.toptal.com/developers/gitignore?templates=node,linux,macos,python,windows,react
 
 ### Linux ###
 *~
@@ -365,6 +365,19 @@ poetry.toml
 # LSP config files
 pyrightconfig.json
 
+### react ###
+.DS_*
+**/*.backup.*
+**/*.back.*
+
+node_modules
+
+*.sublime*
+
+psd
+thumb
+sketch
+
 ### Windows ###
 # Windows thumbnail cache files
 Thumbs.db
@@ -391,4 +404,4 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
-# End of https://www.toptal.com/developers/gitignore/api/windows,macos,linux,node,python
+# End of https://www.toptal.com/developers/gitignore/api/node,linux,macos,python,windows,react

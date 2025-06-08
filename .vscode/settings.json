@@ -1,45 +1,74 @@
 {
+  "editor.formatOnSave": false,
+  // Tailwind CSS
+  "files.associations": {
+    "*.css": "tailwindcss"
+  },
+  "emeraldwalk.runonsave": {
+    "commands": [
+      {
+        // .prettierrcのフォーマット
+        "match": "\\.prettierrc$",
+        "cmd": "prettier -w \"${file}\""
+      },
+      {
+        // .prettierignoreのフォーマット
+        "match": "\\.prettierignore$",
+        "cmd": "prettier -w \"${file}\""
+      },
+      {
+        // Dcokerfileのフォーマット
+        "match": "\\bDockerfile$",
+        "cmd": "dockerfmt -n -w \"${file}\""
+      },
+      {
+        // シェルスクリプトのフォーマット
+        "match": "\\.sh$",
+        "cmd": "shfmt -w \"${file}\""
+      },
+      {
+        // YAMLのフォーマット
+        "match": "\\.ya?ml$",
+        "cmd": "prettier -w \"${file}\""
+      },
+      {
+        // JSONのフォーマット
+        "match": "\\.json$",
+        "cmd": "prettier -w \"${file}\""
+      },
+      {
+        // JavaScriptのフォーマット
+        "match": "\\.jsx?$",
+        "cmd": "prettier -w \"${file}\""
+      },
+      {
+        // TypeScriptのフォーマット
+        "match": "\\.tsx?$",
+        "cmd": "prettier -w \"${file}\""
+      },
+      {
+        // TOMLのフォーマット
+        "match": "\\.toml$",
+        "cmd": "taplo fmt \"${file}\""
+      }
+    ]
+  },
+  // CSS
+  "[css][tailwindcss]": {
+    "editor.defaultFormatter": "bradlc.vscode-tailwindcss",
+    "editor.formatOnSave": true
+  },
   // Python
   "[python]": {
     "editor.defaultFormatter": "ms-python.black-formatter",
     "editor.formatOnSave": true
   },
-  "python.analysis.extraPaths": ["/venv/lib/python3.11/site-packages/"],
-
+  "python.defaultInterpreterPath": "${workspaceFolder}/.venv",
+  "python.analysis.extraPaths": [
+    "/venv/lib/python3.11/site-packages/",
+    "/workspaces/github-trending-feeds/.venv/lib/python3.13/site-packages/",
+    "/workspaces/github-trending-feeds/.venv/lib64/python3.13/site-packages/"
+  ],
   // Back Formatter
-  "black-formatter.args": ["--line-length=200"],
-
-  // CSS
-  "[css]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
-    "editor.formatOnSave": true
-  },
-
-  // Tailwind CSS
-  "files.associations": {
-    "*.css": "tailwindcss"
-  },
-
-  // JavaScript
-  "[javascript]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
-    "editor.formatOnSave": true
-  },
-  "[javascriptreact]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
-    "editor.formatOnSave": true
-  },
-
-  // TypeScript
-  "[typescript]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
-    "editor.formatOnSave": true
-  },
-  "[typescriptreact]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
-    "editor.formatOnSave": true
-  },
-
-  // Prettier
-  "prettier.printWidth": 200, 
+  "black-formatter.args": ["--line-length=200"]
 }
