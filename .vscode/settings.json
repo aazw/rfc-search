@@ -63,12 +63,14 @@
     "editor.defaultFormatter": "ms-python.black-formatter",
     "editor.formatOnSave": true
   },
-  "python.defaultInterpreterPath": "${workspaceFolder}/.venv",
+  "python.defaultInterpreterPath": "${workspaceFolder}/python/.venv/bin/",
   "python.analysis.extraPaths": [
-    "/venv/lib/python3.11/site-packages/",
-    "/workspaces/github-trending-feeds/.venv/lib/python3.13/site-packages/",
-    "/workspaces/github-trending-feeds/.venv/lib64/python3.13/site-packages/"
+    "${workspaceFolder}/python/.venv/lib/python3.13/site-packages/",
+    "${workspaceFolder}/python/.venv/lib64/python3.13/site-packages/",
+    "/home/vscode/.local/lib/python3.13/site-packages/",
+    "/home/vscode/.local/lib64/python3.13/site-packages/"
   ],
   // Back Formatter
+  "black-formatter.interpreter": ["/home/vscode/.local/bin/python"],
   "black-formatter.args": ["--line-length=200"]
 }
