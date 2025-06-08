@@ -6,6 +6,9 @@ on:
     types: [opened, synchronize, reopened]
     branches: [main, master]
     paths:
+      - "node/package.json"
+      - "node/package-lock.json"
+      - "node/yarn.lock"
       - "renovate.json"
 
 permissions:
