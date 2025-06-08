@@ -9,8 +9,7 @@
     "lint": "eslint .",
     "preview": "vite preview"
   },
-  "dependencies": {
-  },
+  "dependencies": {},
   "devDependencies": {
     "@duckdb/duckdb-wasm": "^1.29.0",
     "eslint-plugin-react": "^7.37.3",

@@ -85,7 +85,9 @@ interface RFCEntry {
   doi: string;
 }
 
-async function initDuckDB(updateProgress: ((loaded: number) => void) | null = null): Promise<duckdb.AsyncDuckDB | null> {
+async function initDuckDB(
+  updateProgress: ((loaded: number) => void) | null = null,
+): Promise<duckdb.AsyncDuckDB | null> {
   if (updateProgress) {
     updateProgress(-1);
   }
@@ -155,7 +157,10 @@ async function initDuckDB(updateProgress: ((loaded: number) => void) | null = nu
     await db.registerFileBuffer("rfc_duckdb", new Uint8Array(arrayBuffer));
   } else {
     // 通常の実装
-    await db.registerFileBuffer("rfc_duckdb", new Uint8Array(await response.arrayBuffer()));
+    await db.registerFileBuffer(
+      "rfc_duckdb",
+      new Uint8Array(await response.arrayBuffer()),
+    );
   }
 
   // await db.registerFileBuffer("rfc_duckdb", new Uint8Array(await response.arrayBuffer()));
@@ -179,7 +184,12 @@ type GetRFCEntriesResult = {
   RFCEntries: RFCEntry[];
 };
 
-async function getRFCEntries({ db, searchText = "", limit = 100, offset = 0 }: GetRFCEntriesResuest): Promise<GetRFCEntriesResult> {
+async function getRFCEntries({
+  db,
+  searchText = "",
+  limit = 100,
+  offset = 0,
+}: GetRFCEntriesResuest): Promise<GetRFCEntriesResult> {
   const conn = await db.connect();
   console.log("Database connected!");
 
@@ -432,7 +442,10 @@ export default function Table() {
   const [db, setDB] = useState<duckdb.AsyncDuckDB | null>(null);
 
   // 現在の検索条件・ページ
-  const [condition, setCondition] = useState<Condition>({ SearchText: "", CurrentPage: 1 });
+  const [condition, setCondition] = useState<Condition>({
+    SearchText: "",
+    CurrentPage: 1,
+  });
 
   // DuckDBから取得したデータ
   const [result, setResult] = useState<GetRFCEntriesResult | null>(null);
@@ -464,7 +477,9 @@ export default function Table() {
   }, [db, condition]);
 
   // イベントハンドラ
-  const onSearchTextValueChanged = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const onSearchTextValueChanged = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     const newValue = event.target.value;
     const newCondition: Condition = {
       SearchText: newValue,
@@ -513,7 +528,9 @@ export default function Table() {
         <>
           {progress == -2 && <div className="mx-2">Before Loading</div>}
           {progress == -1 && <div className="mx-2">Start Loading </div>}
-          {progress > -1 && <div className="mx-2">Now Loading ... {progress.toFixed(2)} %</div>}
+          {progress > -1 && (
+            <div className="mx-2">Now Loading ... {progress.toFixed(2)} %</div>
+          )}
         </>
       )}
       {result != null && (
@@ -531,7 +548,11 @@ export default function Table() {
               <span className="basis-full lg:basis-auto lg:flex-none mt-2 lg:mt-0 py-2 lg:px-4 text-xs lg:text-base">
                 {result?.Total > 0 && (
                   <>
-                    Showing {(condition.CurrentPage - 1) * 100 + 1} - {condition.CurrentPage * 100 > result?.Total ? result?.Total : condition.CurrentPage * 100} of {result?.Total}
+                    Showing {(condition.CurrentPage - 1) * 100 + 1} -{" "}
+                    {condition.CurrentPage * 100 > result?.Total
+                      ? result?.Total
+                      : condition.CurrentPage * 100}{" "}
+                    of {result?.Total}
                   </>
                 )}
                 {result?.Total == 0 && <>No data</>}
@@ -539,25 +560,41 @@ export default function Table() {
               <div className="basis-full lg:basis-auto lg:grow-0 mt-2 lg:mt-0">
                 {/* '<' */}
                 {condition.CurrentPage > 1 && (
-                  <button onClick={onPreviousPageButtonClicked} className="text-blue-600 bg-gray-300 hover:text-white hover:bg-blue-700 font-bold py-2 px-2 lg:px-4 rounded-l cursor-pointer">
+                  <button
+                    onClick={onPreviousPageButtonClicked}
+                    className="text-blue-600 bg-gray-300 hover:text-white hover:bg-blue-700 font-bold py-2 px-2 lg:px-4 rounded-l cursor-pointer"
+                  >
                     &lt;
                   </button>
                 )}
                 {condition.CurrentPage == 1 && (
-                  <button onClick={onPreviousPageButtonClicked} className="text-blue-600 bg-gray-300 hover:text-white hover:bg-blue-700 font-bold py-2 px-2 lg:px-4 rounded-l cursor-not-allowed">
+                  <button
+                    onClick={onPreviousPageButtonClicked}
+                    className="text-blue-600 bg-gray-300 hover:text-white hover:bg-blue-700 font-bold py-2 px-2 lg:px-4 rounded-l cursor-not-allowed"
+                  >
                     &lt;
                   </button>
                 )}
                 {/* 1 */}
                 {condition.CurrentPage != 1 && (
-                  <button className="text-blue-600 bg-gray-300 hover:text-white hover:bg-blue-700 font-bold py-2 px-2 lg:px-4 cursor-pointer" onClick={() => onSpecificPageButtonClicked(1)}>
+                  <button
+                    className="text-blue-600 bg-gray-300 hover:text-white hover:bg-blue-700 font-bold py-2 px-2 lg:px-4 cursor-pointer"
+                    onClick={() => onSpecificPageButtonClicked(1)}
+                  >
                     1
                   </button>
                 )}
-                {condition.CurrentPage == 1 && <button className="text-white bg-blue-500 hover:bg-blue-700 font-bold py-2 px-2 lg:px-4 cursor-not-allowed">1</button>}
+                {condition.CurrentPage == 1 && (
+                  <button className="text-white bg-blue-500 hover:bg-blue-700 font-bold py-2 px-2 lg:px-4 cursor-not-allowed">
+                    1
+                  </button>
+                )}
                 {/* ... */}
                 {condition.CurrentPage >= 4 && (
-                  <button disabled className="bg-gray-300 font-bold py-2 px-2 lg:px-4">
+                  <button
+                    disabled
+                    className="bg-gray-300 font-bold py-2 px-2 lg:px-4"
+                  >
                     ...
                   </button>
                 )}
@@ -565,50 +602,72 @@ export default function Table() {
                 {condition.CurrentPage >= 3 && (
                   <button
                     className="text-blue-600 bg-gray-300 hover:text-white hover:bg-blue-700 font-bold py-2 px-2 lg:px-4 cursor-pointer"
-                    onClick={() => onSpecificPageButtonClicked(condition.CurrentPage - 1)}
+                    onClick={() =>
+                      onSpecificPageButtonClicked(condition.CurrentPage - 1)
+                    }
                   >
                     {condition.CurrentPage - 1}
                   </button>
                 )}
                 {/* Current Page  */}
-                {condition.CurrentPage >= 2 && condition.CurrentPage <= getLastPage(result?.Total) - 1 && (
-                  <button className="text-white bg-blue-500 hover:bg-blue-700 font-bold py-2 px-2 lg:px-4 cursor-not-allowed">{condition.CurrentPage}</button>
-                )}
+                {condition.CurrentPage >= 2 &&
+                  condition.CurrentPage <= getLastPage(result?.Total) - 1 && (
+                    <button className="text-white bg-blue-500 hover:bg-blue-700 font-bold py-2 px-2 lg:px-4 cursor-not-allowed">
+                      {condition.CurrentPage}
+                    </button>
+                  )}
                 {/* Next Page (Current Page + 1) */}
                 {condition.CurrentPage <= getLastPage(result?.Total) - 2 && (
                   <button
                     className="text-blue-600 bg-gray-300 hover:text-white hover:bg-blue-700 font-bold py-2 px-2 lg:px-4 cursor-pointer"
-                    onClick={() => onSpecificPageButtonClicked(condition.CurrentPage + 1)}
+                    onClick={() =>
+                      onSpecificPageButtonClicked(condition.CurrentPage + 1)
+                    }
                   >
                     {condition.CurrentPage + 1}
                   </button>
                 )}
                 {/* ... */}
                 {condition.CurrentPage <= getLastPage(result?.Total) - 3 && (
-                  <button disabled className="bg-gray-300 font-bold py-2 px-2 lg:px-4">
+                  <button
+                    disabled
+                    className="bg-gray-300 font-bold py-2 px-2 lg:px-4"
+                  >
                     ...
                   </button>
                 )}
                 {/* Last Page */}
-                {1 < getLastPage(result?.Total) && condition.CurrentPage != getLastPage(result?.Total) && (
-                  <button
-                    className="text-blue-600 bg-gray-300 hover:text-white hover:bg-blue-700 font-bold py-2 px-2 lg:px-4 cursor-pointer"
-                    onClick={() => onSpecificPageButtonClicked(getLastPage(result?.Total))}
-                  >
-                    {getLastPage(result?.Total)}
-                  </button>
-                )}
-                {1 < getLastPage(result?.Total) && condition.CurrentPage == getLastPage(result?.Total) && (
-                  <button className="text-white bg-blue-500 hover:bg-blue-700 font-bold py-2 px-2 lg:px-4 cursor-not-allowed">{getLastPage(result?.Total)}</button>
-                )}
+                {1 < getLastPage(result?.Total) &&
+                  condition.CurrentPage != getLastPage(result?.Total) && (
+                    <button
+                      className="text-blue-600 bg-gray-300 hover:text-white hover:bg-blue-700 font-bold py-2 px-2 lg:px-4 cursor-pointer"
+                      onClick={() =>
+                        onSpecificPageButtonClicked(getLastPage(result?.Total))
+                      }
+                    >
+                      {getLastPage(result?.Total)}
+                    </button>
+                  )}
+                {1 < getLastPage(result?.Total) &&
+                  condition.CurrentPage == getLastPage(result?.Total) && (
+                    <button className="text-white bg-blue-500 hover:bg-blue-700 font-bold py-2 px-2 lg:px-4 cursor-not-allowed">
+                      {getLastPage(result?.Total)}
+                    </button>
+                  )}
                 {/* '>' */}
                 {condition.CurrentPage < getLastPage(result?.Total) && (
-                  <button onClick={onNextPageButtonClicked} className="text-blue-600 bg-gray-300 hover:text-white hover:bg-blue-700 font-bold py-2 px-2 lg:px-4 rounded-r cursor-pointer">
+                  <button
+                    onClick={onNextPageButtonClicked}
+                    className="text-blue-600 bg-gray-300 hover:text-white hover:bg-blue-700 font-bold py-2 px-2 lg:px-4 rounded-r cursor-pointer"
+                  >
                     &gt;
                   </button>
                 )}
                 {condition.CurrentPage == getLastPage(result?.Total) && (
-                  <button onClick={onNextPageButtonClicked} className="text-blue-600 bg-gray-300 hover:text-white hover:bg-blue-700 font-bold py-2 px-2 lg:px-4 rounded-r cursor-not-allowed">
+                  <button
+                    onClick={onNextPageButtonClicked}
+                    className="text-blue-600 bg-gray-300 hover:text-white hover:bg-blue-700 font-bold py-2 px-2 lg:px-4 rounded-r cursor-not-allowed"
+                  >
                     &gt;
                   </button>
                 )}
@@ -621,30 +680,78 @@ export default function Table() {
                 <table className="border-collapse border table-fixed">
                   <thead className="text-xs text-white bg-gray-700 uppercase">
                     <tr>
-                      <th className="border border-white align-top text-left">Doc ID</th>
-                      <th className="border border-white align-top text-left min-w-60">Title</th>
-                      <th className="border border-white align-top text-left">Author</th>
-                      <th className="border border-white align-top text-left">Date</th>
-                      <th className="border border-white align-top text-left min-w-80">Abstract</th>
-                      <th className="border border-white align-top text-left">Pages</th>
-                      <th className="border border-white align-top text-left">Format</th>
-                      <th className="border border-white align-top text-left">Keywords</th>
-                      <th className="border border-white align-top text-left">Is Also</th>
-                      <th className="border border-white align-top text-left">Obsoletes</th>
-                      <th className="border border-white align-top text-left">Obsoleted By</th>
-                      <th className="border border-white align-top text-left">Updates</th>
-                      <th className="border border-white align-top text-left">Updated By</th>
-                      <th className="border border-white align-top text-left">See Also</th>
-                      <th className="border border-white align-top text-left">References</th>
-                      <th className="border border-white align-top text-left">Referenced By</th>
-                      <th className="border border-white align-top text-left">Draft</th>
-                      <th className="border border-white align-top text-left">Current Status</th>
-                      <th className="border border-white align-top text-left">Publication Status</th>
-                      <th className="border border-white align-top text-left">Stream</th>
-                      <th className="border border-white align-top text-left">Errata URL</th>
-                      <th className="border border-white align-top text-left">Area</th>
-                      <th className="border border-white align-top text-left">WG Acronym</th>
-                      <th className="border border-white align-top text-left">DOI</th>
+                      <th className="border border-white align-top text-left">
+                        Doc ID
+                      </th>
+                      <th className="border border-white align-top text-left min-w-60">
+                        Title
+                      </th>
+                      <th className="border border-white align-top text-left">
+                        Author
+                      </th>
+                      <th className="border border-white align-top text-left">
+                        Date
+                      </th>
+                      <th className="border border-white align-top text-left min-w-80">
+                        Abstract
+                      </th>
+                      <th className="border border-white align-top text-left">
+                        Pages
+                      </th>
+                      <th className="border border-white align-top text-left">
+                        Format
+                      </th>
+                      <th className="border border-white align-top text-left">
+                        Keywords
+                      </th>
+                      <th className="border border-white align-top text-left">
+                        Is Also
+                      </th>
+                      <th className="border border-white align-top text-left">
+                        Obsoletes
+                      </th>
+                      <th className="border border-white align-top text-left">
+                        Obsoleted By
+                      </th>
+                      <th className="border border-white align-top text-left">
+                        Updates
+                      </th>
+                      <th className="border border-white align-top text-left">
+                        Updated By
+                      </th>
+                      <th className="border border-white align-top text-left">
+                        See Also
+                      </th>
+                      <th className="border border-white align-top text-left">
+                        References
+                      </th>
+                      <th className="border border-white align-top text-left">
+                        Referenced By
+                      </th>
+                      <th className="border border-white align-top text-left">
+                        Draft
+                      </th>
+                      <th className="border border-white align-top text-left">
+                        Current Status
+                      </th>
+                      <th className="border border-white align-top text-left">
+                        Publication Status
+                      </th>
+                      <th className="border border-white align-top text-left">
+                        Stream
+                      </th>
+                      <th className="border border-white align-top text-left">
+                        Errata URL
+                      </th>
+                      <th className="border border-white align-top text-left">
+                        Area
+                      </th>
+                      <th className="border border-white align-top text-left">
+                        WG Acronym
+                      </th>
+                      <th className="border border-white align-top text-left">
+                        DOI
+                      </th>
                     </tr>
                   </thead>
                   <tbody className="text-sm text-left text-gray-800">
@@ -653,19 +760,27 @@ export default function Table() {
                         <td className="border border-white align-top text-left">
                           <a
                             className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-                            href={"https://www.rfc-editor.org/info/" + row.doc_id?.toString().toLowerCase()}
+                            href={
+                              "https://www.rfc-editor.org/info/" +
+                              row.doc_id?.toString().toLowerCase()
+                            }
                             target="_blank"
                             rel="noopener noreferrer"
                           >
                             {row.doc_id}
                           </a>
                         </td>
-                        <td className="border border-white align-top text-left">{row.title}</td>
+                        <td className="border border-white align-top text-left">
+                          {row.title}
+                        </td>
                         <td className="border border-white align-top text-left">
                           {!!row.author &&
                             Array.from(row.author)?.map((item, index) => {
                               const isNotLast = row.author.length != index + 1;
-                              const namAndTitle = item.name + " " + (item.title ? "(" + item.title + ")" : "");
+                              const namAndTitle =
+                                item.name +
+                                " " +
+                                (item.title ? "(" + item.title + ")" : "");
                               return (
                                 // https://qiita.com/ikeike_ryuryu/items/edec3acfce7868e4b0d0
                                 <React.Fragment key={namAndTitle}>
@@ -676,10 +791,15 @@ export default function Table() {
                             })}
                         </td>
                         <td className="border border-white align-top text-left">
-                          {row.date.year}/{convertMonthExpression(row.date.month)}
+                          {row.date.year}/
+                          {convertMonthExpression(row.date.month)}
                         </td>
-                        <td className="border border-white align-top text-left">{row.abstract}</td>
-                        <td className="border border-white align-top text-left">{row.page_count}</td>
+                        <td className="border border-white align-top text-left">
+                          {row.abstract}
+                        </td>
+                        <td className="border border-white align-top text-left">
+                          {row.page_count}
+                        </td>
                         <td className="border border-white align-top text-left">
                           {!!row.format &&
                             Array.from(row.format)?.map((item, index) => {
@@ -696,7 +816,8 @@ export default function Table() {
                         <td className="border border-white align-top text-left">
                           {!!row.keywords &&
                             Array.from(row.keywords)?.map((item, index) => {
-                              const isNotLast = row.keywords.length != index + 1;
+                              const isNotLast =
+                                row.keywords.length != index + 1;
                               return (
                                 // https://qiita.com/ikeike_ryuryu/items/edec3acfce7868e4b0d0
                                 <React.Fragment key={item}>
@@ -716,7 +837,10 @@ export default function Table() {
                                   {item.startsWith("RFC") && (
                                     <a
                                       className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-                                      href={"https://www.rfc-editor.org/info/" + item.toString().toLowerCase()}
+                                      href={
+                                        "https://www.rfc-editor.org/info/" +
+                                        item.toString().toLowerCase()
+                                      }
                                       target="_blank"
                                       rel="noopener noreferrer"
                                     >
@@ -732,14 +856,18 @@ export default function Table() {
                         <td className="border border-white align-top text-left">
                           {!!row.obsoletes &&
                             Array.from(row.obsoletes)?.map((item, index) => {
-                              const isNotLast = row.obsoletes.length != index + 1;
+                              const isNotLast =
+                                row.obsoletes.length != index + 1;
                               return (
                                 // https://qiita.com/ikeike_ryuryu/items/edec3acfce7868e4b0d0
                                 <React.Fragment key={item}>
                                   {item.startsWith("RFC") && (
                                     <a
                                       className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-                                      href={"https://www.rfc-editor.org/info/" + item.toString().toLowerCase()}
+                                      href={
+                                        "https://www.rfc-editor.org/info/" +
+                                        item.toString().toLowerCase()
+                                      }
                                       target="_blank"
                                       rel="noopener noreferrer"
                                     >
@@ -755,14 +883,18 @@ export default function Table() {
                         <td className="border border-white align-top text-left">
                           {!!row.obsoleted_by &&
                             Array.from(row.obsoleted_by)?.map((item, index) => {
-                              const isNotLast = row.obsoleted_by.length != index + 1;
+                              const isNotLast =
+                                row.obsoleted_by.length != index + 1;
                               return (
                                 // https://qiita.com/ikeike_ryuryu/items/edec3acfce7868e4b0d0
                                 <React.Fragment key={item}>
                                   {item.startsWith("RFC") && (
                                     <a
                                       className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-                                      href={"https://www.rfc-editor.org/info/" + item.toString().toLowerCase()}
+                                      href={
+                                        "https://www.rfc-editor.org/info/" +
+                                        item.toString().toLowerCase()
+                                      }
                                       target="_blank"
                                       rel="noopener noreferrer"
                                     >
@@ -785,7 +917,10 @@ export default function Table() {
                                   {item.startsWith("RFC") && (
                                     <a
                                       className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-                                      href={"https://www.rfc-editor.org/info/" + item.toString().toLowerCase()}
+                                      href={
+                                        "https://www.rfc-editor.org/info/" +
+                                        item.toString().toLowerCase()
+                                      }
                                       target="_blank"
                                       rel="noopener noreferrer"
                                     >
@@ -801,14 +936,18 @@ export default function Table() {
                         <td className="border border-white align-top text-left">
                           {!!row.updated_by &&
                             Array.from(row.updated_by)?.map((item, index) => {
-                              const isNotLast = row.updated_by.length != index + 1;
+                              const isNotLast =
+                                row.updated_by.length != index + 1;
                               return (
                                 // https://qiita.com/ikeike_ryuryu/items/edec3acfce7868e4b0d0
                                 <React.Fragment key={item}>
                                   {item.startsWith("RFC") && (
                                     <a
                                       className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-                                      href={"https://www.rfc-editor.org/info/" + item.toString().toLowerCase()}
+                                      href={
+                                        "https://www.rfc-editor.org/info/" +
+                                        item.toString().toLowerCase()
+                                      }
                                       target="_blank"
                                       rel="noopener noreferrer"
                                     >
@@ -824,14 +963,18 @@ export default function Table() {
                         <td className="border border-white align-top text-left">
                           {!!row.see_also &&
                             Array.from(row.see_also)?.map((item, index) => {
-                              const isNotLast = row.see_also.length != index + 1;
+                              const isNotLast =
+                                row.see_also.length != index + 1;
                               return (
                                 // https://qiita.com/ikeike_ryuryu/items/edec3acfce7868e4b0d0
                                 <React.Fragment key={item}>
                                   {item.startsWith("RFC") && (
                                     <a
                                       className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-                                      href={"https://www.rfc-editor.org/info/" + item.toString().toLowerCase()}
+                                      href={
+                                        "https://www.rfc-editor.org/info/" +
+                                        item.toString().toLowerCase()
+                                      }
                                       target="_blank"
                                       rel="noopener noreferrer"
                                     >
@@ -847,14 +990,18 @@ export default function Table() {
                         <td className="border border-white align-top text-left">
                           {!!row.references &&
                             Array.from(row.references)?.map((item, index) => {
-                              const isNotLast = row.references.length != index + 1;
+                              const isNotLast =
+                                row.references.length != index + 1;
                               return (
                                 // https://qiita.com/ikeike_ryuryu/items/edec3acfce7868e4b0d0
                                 <React.Fragment key={item}>
                                   {item.startsWith("RFC") && (
                                     <a
                                       className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-                                      href={"https://www.rfc-editor.org/info/" + item.toString().toLowerCase()}
+                                      href={
+                                        "https://www.rfc-editor.org/info/" +
+                                        item.toString().toLowerCase()
+                                      }
                                       target="_blank"
                                       rel="noopener noreferrer"
                                     >
@@ -869,35 +1016,57 @@ export default function Table() {
                         </td>
                         <td className="border border-white align-top text-left">
                           {!!row.referenced_by &&
-                            Array.from(row.referenced_by)?.map((item, index) => {
-                              const isNotLast = row.referenced_by.length != index + 1;
-                              return (
-                                // https://qiita.com/ikeike_ryuryu/items/edec3acfce7868e4b0d0
-                                <React.Fragment key={item}>
-                                  {item.startsWith("RFC") && (
-                                    <a
-                                      className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-                                      href={"https://www.rfc-editor.org/info/" + item.toString().toLowerCase()}
-                                      target="_blank"
-                                      rel="noopener noreferrer"
-                                    >
-                                      {item}
-                                    </a>
-                                  )}
-                                  {!item.startsWith("RFC") && item}
-                                  {isNotLast && <br />}
-                                </React.Fragment>
-                              );
-                            })}
+                            Array.from(row.referenced_by)?.map(
+                              (item, index) => {
+                                const isNotLast =
+                                  row.referenced_by.length != index + 1;
+                                return (
+                                  // https://qiita.com/ikeike_ryuryu/items/edec3acfce7868e4b0d0
+                                  <React.Fragment key={item}>
+                                    {item.startsWith("RFC") && (
+                                      <a
+                                        className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+                                        href={
+                                          "https://www.rfc-editor.org/info/" +
+                                          item.toString().toLowerCase()
+                                        }
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                      >
+                                        {item}
+                                      </a>
+                                    )}
+                                    {!item.startsWith("RFC") && item}
+                                    {isNotLast && <br />}
+                                  </React.Fragment>
+                                );
+                              },
+                            )}
                         </td>
-                        <td className="border border-white align-top text-left">{row.draft}</td>
-                        <td className="border border-white align-top text-left">{row.current_status}</td>
-                        <td className="border border-white align-top text-left">{row.publication_status}</td>
-                        <td className="border border-white align-top text-left">{row.stream}</td>
-                        <td className="border border-white align-top text-left">{row.errata_url}</td>
-                        <td className="border border-white align-top text-left">{row.area}</td>
-                        <td className="border border-white align-top text-left">{row.wg_acronym}</td>
-                        <td className="border border-white align-top text-left">{row.doi}</td>
+                        <td className="border border-white align-top text-left">
+                          {row.draft}
+                        </td>
+                        <td className="border border-white align-top text-left">
+                          {row.current_status}
+                        </td>
+                        <td className="border border-white align-top text-left">
+                          {row.publication_status}
+                        </td>
+                        <td className="border border-white align-top text-left">
+                          {row.stream}
+                        </td>
+                        <td className="border border-white align-top text-left">
+                          {row.errata_url}
+                        </td>
+                        <td className="border border-white align-top text-left">
+                          {row.area}
+                        </td>
+                        <td className="border border-white align-top text-left">
+                          {row.wg_acronym}
+                        </td>
+                        <td className="border border-white align-top text-left">
+                          {row.doi}
+                        </td>
                       </tr>
                     ))}
                   </tbody>
