@@ -12,6 +12,7 @@ ARG DOCKER_NODE_VERSION=22.16.0-bookworm
 ARG DOCKER_GO_VERSION=1.24.4-bookworm
 ARG DOCKER_JQ_VERSION=1.8.0
 ARG DOCKER_YQ_VERSION=4.45.4
+ARG DOCKER_TAPLO_VERSION=0.10.0
 
 # for go install
 ARG GO_DOCKERFMT_VERSION=v0.3.7
@@ -63,6 +64,12 @@ FROM ghcr.io/jqlang/jq:${DOCKER_JQ_VERSION} AS jq-builder
 # https://hub.docker.com/r/mikefarah/yq
 FROM mikefarah/yq:${DOCKER_YQ_VERSION} AS yq-builder
 
+# taplo
+# https://github.com/tamasfe/taplo
+# https://taplo.tamasfe.dev/
+# https://hub.docker.com/r/tamasfe/taplo
+FROM tamasfe/taplo:${DOCKER_TAPLO_VERSION} AS taplo-builder
+
 # ##########################################################################################
 # main image
 # ##########################################################################################
@@ -72,6 +79,7 @@ FROM mikefarah/yq:${DOCKER_YQ_VERSION} AS yq-builder
 # https://note.milldea.com/posts/two-ways-to-install-nodejs-with-fixed-version-in-dockerfile
 FROM node:${DOCKER_NODE_VERSION}
 ENV DEBIAN_FRONTEND=noninteractive
+ENV DEBCONF_NOWARNINGS=yes
 
 # add distribution packages
 RUN apt-get -y update
@@ -103,6 +111,10 @@ COPY --from=jq-builder /jq /usr/local/bin/
 # yq
 # refs above
 COPY --from=yq-builder /usr/bin/yq /usr/local/bin/
+
+# taplo
+# refs above
+COPY --from=taplo-builder /taplo /usr/local/bin/
 
 # prettier
 # https://prettier.io/docs/install
