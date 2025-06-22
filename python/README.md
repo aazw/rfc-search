@@ -5,7 +5,7 @@
 これらのスクリプトは入出力に依存関係があるため、実行順があることに注意.  
 詳しくは、[../README.md](../README.md) を参照されたし.
 
-### 1. apps/trasform_rfc_index_to_json.py  
+### 1. src/trasform_rfc_index_to_json.py  
 
 以下1つ目のURLのトップページの『Browse the RFC Index』 → 『XML』のリンクが、2つ目のURLである.
 * https://www.rfc-editor.org/  
@@ -17,7 +17,7 @@
 
 ```bash
 # Example:
-$ python apps/trasform_rfc_index_to_json.py --help
+$ python src/trasform_rfc_index_to_json.py --help
 Usage: trasform_rfc_index_to_json.py [OPTIONS]
 
 Options:
@@ -29,10 +29,10 @@ Options:
 
 ```bash
 # Example:
-$ python apps/trasform_rfc_index_to_json.py --file rfc-index.json
+$ python src/trasform_rfc_index_to_json.py --file rfc-index.json
 ```
 
-### 2. apps/extract_rfc_referencing_urls_from_rfc_txts.py
+### 2. src/extract_rfc_referencing_urls_from_rfc_txts.py
 
 以下1つ目のURLのトップページの『Get TAR or ZIP files of RFCs』→『All RFCs』→『TXT』→『ZIP』のリンクが2つ目のURLである
 * https://www.rfc-editor.org/retrieve/bulk/
@@ -46,7 +46,7 @@ $ python apps/trasform_rfc_index_to_json.py --file rfc-index.json
 
 ```bash
 # Example:
-$ python apps/extract_rfc_referencing_urls_from_rfc_txts.py --help
+$ python src/extract_rfc_referencing_urls_from_rfc_txts.py --help
 Usage: extract_rfc_referencing_urls_from_rfc_txts.py [OPTIONS]
 
 Options:
@@ -59,13 +59,13 @@ Options:
 
 ```bash
 # Example:
-$ python apps/extract_rfc_referencing_urls_from_rfc_txts.py --file rfc-referencing-urls.json
+$ python src/extract_rfc_referencing_urls_from_rfc_txts.py --file rfc-referencing-urls.json
 
 # ローカルのファイルを参照する場合
-$ python apps/extract_rfc_referencing_urls_from_rfc_txts.py --zipfile ./RFC-all.zip --file rfc-referencing-urls.json
+$ python src/extract_rfc_referencing_urls_from_rfc_txts.py --zipfile ./RFC-all.zip --file rfc-referencing-urls.json
 ```
 
-### 3. apps/create_duckdb_persistent_db.py
+### 3. src/create_duckdb_persistent_db.py
 
 DuckDBのPersistent Databaseファイル(`.duckdb`など)を作成し、かつ`rfc_entries`テーブルを作成する.
 * DuckDBのPersistent Databaseは以下のようなファイル拡張子が使われる
@@ -79,14 +79,14 @@ DuckDBのPersistent Databaseファイル(`.duckdb`など)を作成し、かつ`r
 
 また、オプションで追加することで、データを投入できる.
 
-* `apps/trasform_rfc_index_to_json.py`で出力したRFC Indexを投入する(JSONファイル)
-* `apps/extract_rfc_referencing_urls_from_rfc_txts.py`で出力したURL情報を下に、各RFCに他RFCへの参照情報、他RFCからの被参照情報を追加する
+* `src/trasform_rfc_index_to_json.py`で出力したRFC Indexを投入する(JSONファイル)
+* `src/extract_rfc_referencing_urls_from_rfc_txts.py`で出力したURL情報を下に、各RFCに他RFCへの参照情報、他RFCからの被参照情報を追加する
   * RFC Indexを投入することが前提
   * 他RFC参照情報を`references`カラムに、他RFCからの被参照情報を`referenced_by`カラムに追加する
 
 ```bash
 # Example:
-$ python apps/create_duckdb_persistent_db.py --help
+$ python src/create_duckdb_persistent_db.py --help
 Usage: create_duckdb_persistent_db.py [OPTIONS]
 
 Options:
@@ -100,10 +100,10 @@ Options:
 ```bash
 # Example:
 # テーブル作成 (データなし)
-$ python apps/create_duckdb_persistent_db.py --dbfile rfc.duckdb 
+$ python src/create_duckdb_persistent_db.py --dbfile rfc.duckdb 
 
 # テーブル作成 (データも投入)
-$ python apps/create_duckdb_persistent_db.py --dbfile rfc.duckdb --rfc-index rfc-index.json --rfc-referencing-urls rfc-referencing-urls.json
+$ python src/create_duckdb_persistent_db.py --dbfile rfc.duckdb --rfc-index rfc-index.json --rfc-referencing-urls rfc-referencing-urls.json
 ```
 
 ## Utility Scripts
@@ -111,14 +111,14 @@ $ python apps/create_duckdb_persistent_db.py --dbfile rfc.duckdb --rfc-index rfc
 Main Scriptsを補助するものであったり、開発の調査目的ものなど.  
 実行は必須ではない.
 
-### apps/get_all_xmlpaths_from_rfc_index.py.py  
+### src/get_all_xmlpaths_from_rfc_index.py.py  
 
 `trasform_rfc_xmls.py`で使っているRFC一覧のXML形式のXMLファイルの、要素の一覧をXPath形式で出力するツール.  
 開発時の要素名・構造の解析用.
 
 ```bash
 # Example:
-$ python apps/get_all_xmlpaths_from_rfc_index.py --help
+$ python src/get_all_xmlpaths_from_rfc_index.py --help
 Usage: get_all_xmlpaths_from_rfc_index.py [OPTIONS]
 
 Options:
@@ -128,26 +128,26 @@ Options:
 
 ```bash
 # Example
-$ python apps/get_all_xmlpaths_from_rfc_index.py 
-2025-01-13 14:19:02,921 - /workspaces/rfc-search/python/apps/get_all_xmlpaths_from_rfc_index.py:98 - INFO - app start
-2025-01-13 14:19:02,921 - /workspaces/rfc-search/python/apps/get_all_xmlpaths_from_rfc_index.py:99 - INFO - command line argument: --url = https://www.rfc-editor.org/rfc-index.xml
-2025-01-13 14:19:02,921 - /workspaces/rfc-search/python/apps/get_all_xmlpaths_from_rfc_index.py:102 - INFO - rfc index importing from internet: url=https://www.rfc-editor.org/rfc-index.xml
-2025-01-13 14:19:05,013 - /workspaces/rfc-search/python/apps/get_all_xmlpaths_from_rfc_index.py:108 - INFO - rfc index imported from internet: url=https://www.rfc-editor.org/rfc-index.xml
+$ python src/get_all_xmlpaths_from_rfc_index.py 
+2025-01-13 14:19:02,921 - /workspaces/rfc-search/python/src/get_all_xmlpaths_from_rfc_index.py:98 - INFO - app start
+2025-01-13 14:19:02,921 - /workspaces/rfc-search/python/src/get_all_xmlpaths_from_rfc_index.py:99 - INFO - command line argument: --url = https://www.rfc-editor.org/rfc-index.xml
+2025-01-13 14:19:02,921 - /workspaces/rfc-search/python/src/get_all_xmlpaths_from_rfc_index.py:102 - INFO - rfc index importing from internet: url=https://www.rfc-editor.org/rfc-index.xml
+2025-01-13 14:19:05,013 - /workspaces/rfc-search/python/src/get_all_xmlpaths_from_rfc_index.py:108 - INFO - rfc index imported from internet: url=https://www.rfc-editor.org/rfc-index.xml
 /{https://www.rfc-editor.org/rfc-index}rfc-index
 /{https://www.rfc-editor.org/rfc-index}rfc-index/{https://www.rfc-editor.org/rfc-index}bcp-entry
 /{https://www.rfc-editor.org/rfc-index}rfc-index/{https://www.rfc-editor.org/rfc-index}bcp-entry/{https://www.rfc-editor.org/rfc-index}doc-id
 ... (省略)
-2025-01-13 14:19:05,096 - /workspaces/rfc-search/python/apps/get_all_xmlpaths_from_rfc_index.py:117 - INFO - app finished
+2025-01-13 14:19:05,096 - /workspaces/rfc-search/python/src/get_all_xmlpaths_from_rfc_index.py:117 - INFO - app finished
 ```
 
-### apps/verify_duckdb_persistent_db.py
+### src/verify_duckdb_persistent_db.py
 
 `trasform_rfc_xmls.py`で作成したDuckDBのPersistent Databaseのファイルが、ちゃんと読み込めるファイルになっているか、実際に読んでみて検証するためのもの.  
 デフォルトでは概要として一部列や行が省略されたテーブルが表示されるが、columnを指定することで特定の列のみ表示することもできる.
 
 ```bash
 # Example
-$ python apps/verify_duckdb_persistent_db.py --help
+$ python src/verify_duckdb_persistent_db.py --help
 Usage: verify_duckdb_persistent_db.py [OPTIONS]
 
 Options:
@@ -158,14 +158,14 @@ Options:
 
 ```bash
 # Example
-$ python apps/verify_duckdb_persistent_db.py --dbfile rfc.duckdb 
-2025-01-13 14:20:27,973 - /workspaces/rfc-search/python/apps/verify_duckdb_persistent_db.py:27 - INFO - app start
-2025-01-13 14:20:27,973 - /workspaces/rfc-search/python/apps/verify_duckdb_persistent_db.py:28 - INFO - command line argument: --dbfile = rfc.duckdb
-2025-01-13 14:20:27,973 - /workspaces/rfc-search/python/apps/verify_duckdb_persistent_db.py:29 - INFO - command line argument: --column = None
-2025-01-13 14:20:27,973 - /workspaces/rfc-search/python/apps/verify_duckdb_persistent_db.py:32 - INFO - duckdb database connecting: dbfile=rfc.duckdb
-2025-01-13 14:20:27,978 - /workspaces/rfc-search/python/apps/verify_duckdb_persistent_db.py:48 - INFO - duckdb database connected: dbfile=rfc.duckdb
+$ python src/verify_duckdb_persistent_db.py --dbfile rfc.duckdb 
+2025-01-13 14:20:27,973 - /workspaces/rfc-search/python/src/verify_duckdb_persistent_db.py:27 - INFO - app start
+2025-01-13 14:20:27,973 - /workspaces/rfc-search/python/src/verify_duckdb_persistent_db.py:28 - INFO - command line argument: --dbfile = rfc.duckdb
+2025-01-13 14:20:27,973 - /workspaces/rfc-search/python/src/verify_duckdb_persistent_db.py:29 - INFO - command line argument: --column = None
+2025-01-13 14:20:27,973 - /workspaces/rfc-search/python/src/verify_duckdb_persistent_db.py:32 - INFO - duckdb database connecting: dbfile=rfc.duckdb
+2025-01-13 14:20:27,978 - /workspaces/rfc-search/python/src/verify_duckdb_persistent_db.py:48 - INFO - duckdb database connected: dbfile=rfc.duckdb
 (省略)
-2025-01-13 14:20:28,006 - /workspaces/rfc-search/python/apps/verify_duckdb_persistent_db.py:59 - INFO - app finished
+2025-01-13 14:20:28,006 - /workspaces/rfc-search/python/src/verify_duckdb_persistent_db.py:59 - INFO - app finished
 ```
 
 

@@ -36,30 +36,29 @@ jobs:
           python-version: "3.13"
       - name: Install uv
         uses: astral-sh/setup-uv@v6
+        with:
+          working-directory: python
       - name: Setup uv
-        run: |
-          cd python 
-          uv sync --link-mode=copy
+        working-directory: python
+        run: uv sync --link-mode=copy --frozen
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 22
       - name: Setup npm
-        run: |
-          cd node
-          npm install
+        working-directory: node
+        run: npm install
       - name: Build DuckDB Persistent Database
+        working-directory: python
         run: |
-          cd python
-          uv run apps/trasform_rfc_index_to_json.py --file ./rfc-index.json
-          uv run apps/extract_rfc_referencing_urls_from_rfc_txts.py --file ./rfc-referencing-urls.json
-          uv run apps/create_duckdb_persistent_db.py --dbfile ./rfc.duckdb --rfc-index ./rfc-index.json --rfc-referencing-urls ./rfc-referencing-urls.json
+          uv run src/trasform_rfc_index_to_json.py --file ./rfc-index.json
+          uv run src/extract_rfc_referencing_urls_from_rfc_txts.py --file ./rfc-referencing-urls.json
+          uv run src/create_duckdb_persistent_db.py --dbfile ./rfc.duckdb --rfc-index ./rfc-index.json --rfc-referencing-urls ./rfc-referencing-urls.json
       - name: Copy DuckDB Persistent Database
         run: cp python/rfc.duckdb node/src/rfc.duckdb
       - name: Build with Vite
-        run: |
-          cd node
-          npm run build
+        working-directory: node
+        run: npm run build
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Upload artifact
