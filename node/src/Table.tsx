@@ -126,35 +126,38 @@ async function initDuckDB(
     const totalSize = parseInt(contentLength, 10);
     let loadedSize = 0;
 
-    // 空の Uint8Array を作成してデータを保持
-    const arrayBuffer = new Uint8Array(totalSize);
+    // 動的配列でチャンクを保持
+    const chunks: Uint8Array[] = [];
 
     // ストリームリーダーを取得
     const reader = response.body.getReader();
 
-    // ArrayBuffer に書き込む位置を管理
-    let offset = 0;
     while (true) {
       const { done, value } = await reader.read();
       if (done) {
         break;
       }
 
-      // 読み取ったデータを ArrayBuffer に書き込む
-      arrayBuffer.set(value, offset);
-      offset += value.length;
+      // チャンクを配列に追加
+      chunks.push(value);
 
       // プログレスを更新
       loadedSize += value.length;
-
-      // updateProgress(loadedSize);
       const percentage = (loadedSize / totalSize) * 100;
       if (updateProgress) {
         updateProgress(percentage);
       }
     }
 
-    await db.registerFileBuffer("rfc_duckdb", new Uint8Array(arrayBuffer));
+    // 全チャンクを結合
+    const arrayBuffer = new Uint8Array(loadedSize);
+    let offset = 0;
+    for (const chunk of chunks) {
+      arrayBuffer.set(chunk, offset);
+      offset += chunk.length;
+    }
+
+    await db.registerFileBuffer("rfc_duckdb", arrayBuffer);
   } else {
     // 通常の実装
     await db.registerFileBuffer(
