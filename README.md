@@ -37,7 +37,7 @@ A web tool for easily searching and visualizing RFCs and their dependencies.
                         |   | '--url https://...'                                           |   | '--url https://...'
                         v   |                                                               v   |
 +---------------------------------------------------+        +-------------------------------------------------------------------+
-| python: python/apps/trasform_rfc_index_to_json.py |        | python: python/apps/extract_rfc_referencing_urls_from_rfc_txts.py |
+| python: python/src/trasform_rfc_index_to_json.py |        | python: python/src/extract_rfc_referencing_urls_from_rfc_txts.py |
 +---------------------------------------------------+        +-------------------------------------------------------------------+
                           |                                                                   |      
                           | '--file ./rfc-index.json'                                         | '--file ./rfc-referencing-urls.json'
@@ -50,7 +50,7 @@ A web tool for easily searching and visualizing RFCs and their dependencies.
            '--rfc-index ./rfc-index.json' |                               | '--rfc-referencing-urls ./rfc-referencing-urls.json'
                                           v                               v
                                +----------------------------------------------------+
-                               | python: python/apps/create_duckdb_persistent_db.py |
+                               | python: python/src/create_duckdb_persistent_db.py |
                                +----------------------------------------------------+
                                                           |
                                                           | '--dbfile ./rfc.duckdb'
