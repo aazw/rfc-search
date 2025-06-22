@@ -37,7 +37,7 @@ ARG OTHER_YQ_VERSION=4.45.4
 ARG OTHER_XQ_VERSION=1.3.0
 ARG OTHER_TAPLO_VERSION=0.10.0
 ARG OTHER_SHELLCHECK_VERSION=v0.10.0
-ARG OTHER_DUCKDB_VERSION=1.3.0
+ARG OTHER_DUCKDB_VERSION=1.3.1
 
 # ##########################################################################################
 # builder images
