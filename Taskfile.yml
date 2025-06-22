@@ -26,6 +26,6 @@ tasks:
   serve:
     dir: "{{ .TASKFILE_DIR }}/node/"
     cmds:
-      - pwd
+      - npm run build
       - docker run -it --rm -v ${LOCAL_WORKSPACE_FOLDER}/node/dist/:/usr/share/nginx/html/ -p 8000:80 nginx
     silent: true

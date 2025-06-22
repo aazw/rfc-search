@@ -123,7 +123,7 @@ async function initDuckDB(
     }
 
     // プログレスバーを表示する実装
-    const totalSize = parseInt(contentLength, 10);
+    const expectedSize = parseInt(contentLength, 10);
     let loadedSize = 0;
 
     // 動的配列でチャンクを保持
@@ -143,7 +143,9 @@ async function initDuckDB(
 
       // プログレスを更新
       loadedSize += value.length;
-      const percentage = (loadedSize / totalSize) * 100;
+      // 実際のサイズがexpectedSizeを超えた場合はexpectedSizeを更新
+      const actualTotal = Math.max(expectedSize, loadedSize);
+      const percentage = (loadedSize / actualTotal) * 100;
       if (updateProgress) {
         updateProgress(percentage);
       }
