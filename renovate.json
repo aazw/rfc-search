@@ -164,6 +164,15 @@
       "customType": "regex",
       "managerFilePatterns": ["/^\\.devcontainer\\/Dockerfile$/"],
       "matchStringsStrategy": "any",
+      "matchStrings": ["ARG\\s+OTHER_RIPGREP_VERSION=(?<currentValue>\\S+)"],
+      "datasourceTemplate": "github-tags",
+      "depNameTemplate": "BurntSushi/ripgrep",
+      "versioningTemplate": "semver-coerced"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": ["/^\\.devcontainer\\/Dockerfile$/"],
+      "matchStringsStrategy": "any",
       "matchStrings": ["ARG\\s+OTHER_DUCKDB_VERSION=(?<currentValue>\\S+)"],
       "datasourceTemplate": "github-tags",
       "depNameTemplate": "duckdb/duckdb",
@@ -176,7 +185,7 @@
       "matchManagers": ["custom.regex"],
       "matchDatasources": ["npm"],
       "matchDepNames": ["renovate"],
-      "matchUpdateTypes": ["patch"]
+      "matchUpdateTypes": ["minor", "patch"]
     },
     {
       "matchFileNames": [".devcontainer/**"],

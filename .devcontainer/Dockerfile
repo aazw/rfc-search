@@ -37,6 +37,7 @@ ARG OTHER_YQ_VERSION=4.45.4
 ARG OTHER_XQ_VERSION=1.3.0
 ARG OTHER_TAPLO_VERSION=0.10.0
 ARG OTHER_SHELLCHECK_VERSION=v0.10.0
+ARG OTHER_RIPGREP_VERSION=14.1.1
 ARG OTHER_DUCKDB_VERSION=1.3.1
 
 # ##########################################################################################
@@ -252,7 +253,18 @@ RUN curl -fsSL -o /shellcheck.tar.xz https://github.com/koalaman/shellcheck/rele
     && rm -rf /shellcheck-${OTHER_SHELLCHECK_VERSION} \
     && shellcheck --version
 
-# Duckdb
+# ripgrep
+# https://github.com/BurntSushi/ripgrep
+ARG OTHER_RIPGREP_VERSION
+RUN mkdir -p /ripgrep \
+    && curl -fsSL -o /ripgrep/ripgrep.tar.gz -L https://github.com/BurntSushi/ripgrep/releases/download/${OTHER_RIPGREP_VERSION}/ripgrep-${OTHER_RIPGREP_VERSION}-$(uname -m)-unknown-linux-gnu.tar.gz \
+    && cd /ripgrep \
+    && tar -xvzf ripgrep.tar.gz \
+    && mv ripgrep-${OTHER_RIPGREP_VERSION}-$(uname -m)-unknown-linux-gnu/rg /usr/local/bin/ \
+    && chmod +x /usr/local/bin/rg \
+    && rm -rf /ripgrep
+
+# duckdb
 # https://github.com/duckdb/duckdb
 # https://duckdb.org/docs/stable/
 # https://duckdb.org/docs/installation/?version=stable&environment=cli&platform=linux&download_method=direct&architecture=arm64
