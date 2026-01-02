@@ -424,6 +424,10 @@ core.*
 .claude/*
 !.claude/settings.json
 
+# Devbox
+.devbox
+**/.devbox
+
 # builds
 **/*.duckdb
 **/*.ddb

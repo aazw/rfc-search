@@ -4,7 +4,11 @@
     "dockerfile": "Dockerfile"
   },
   "features": {
-    "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {}
+    "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {
+      "version": "latest",
+      "enableNonRootDocker": "true",
+      "moby": "true"
+    }
   },
   "customizations": {
     "vscode": {
@@ -12,10 +16,12 @@
         "emeraldwalk.runonsave",
         "ms-azuretools.vscode-containers",
         "ms-azuretools.vscode-docker",
-        "ms-python.python",
-        "ms-python.black-formatter",
-        "ms-python.isort",
         "tamasfe.even-better-toml",
+        "anthropic.claude-code",
+        "openai.chatgpt",
+        "ms-python.python",
+        // "ms-python.black-formatter",
+        // "ms-python.isort",
         "charliermarsh.ruff",
         "dbaeumer.vscode-eslint",
         "bradlc.vscode-tailwindcss"
@@ -37,11 +43,8 @@
   "remoteEnv": {
     "LOCAL_WORKSPACE_FOLDER": "${localWorkspaceFolder}",
     "TZ": "Asia/Tokyo",
+    "TASK_X_ENV_PRECEDENCE": "1",
     "UV_PROJECT_ENVIRONMENT": "${containerWorkspaceFolder}/python/.venv"
-  },
-  "containerEnv": {
-    // "LANG": "ja_JP.UTF-8",
-    // "LC_MESSAGES": "C"
   },
   "runArgs": [
     "--name",

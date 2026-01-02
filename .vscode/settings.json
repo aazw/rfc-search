@@ -1,77 +1,46 @@
 {
+  "search.exclude": {
+    "**/.git/**": true,
+    "**/.venv/**": true,
+    "**/__pycache__/**": true,
+    "**/.devbox/**": true
+  },
+  "files.exclude": {
+    "**/.git": true,
+    "**/.svn": true,
+    "**/.hg": true,
+    "**/.DS_Store": true,
+    "**/Thumbs.db": true,
+    "**/.devbox": true // 重いので追加
+  },
+  "files.watcherExclude": {
+    "**/.git/**": true,
+    "**/.venv/**": true,
+    "**/__pycache__/**": true,
+    "**/.devbox/**": true
+  },
   "editor.formatOnSave": false,
-  // Tailwind CSS
   "files.associations": {
+    "devbox.json": "jsonc",
     "*.css": "tailwindcss"
+  },
+  "editor.wordWrap": "off",
+  "[markdown]": {
+    "editor.wordWrap": "off"
   },
   "emeraldwalk.runonsave": {
     "commands": [
       {
-        // .prettierrcのフォーマット
-        "match": "\\.prettierrc$",
-        "cmd": "prettier -w \"${file}\""
-      },
-      {
-        // .prettierignoreのフォーマット
-        "match": "\\.prettierignore$",
-        "cmd": "prettier -w \"${file}\""
-      },
-      {
-        // Dcokerfileのフォーマット
-        "match": "\\bDockerfile$",
-        "cmd": "dockerfmt -n -w \"${file}\""
-      },
-      {
-        // シェルスクリプトのフォーマット
-        "match": "\\.sh$",
-        "cmd": "shfmt -w \"${file}\""
-      },
-      {
-        // YAMLのフォーマット
-        "match": "\\.ya?ml$",
-        "cmd": "prettier -w \"${file}\""
-      },
-      {
-        // JSONのフォーマット
-        "match": "\\.json$",
-        "cmd": "prettier -w \"${file}\""
-      },
-      {
-        // JavaScriptのフォーマット
-        "match": "\\.jsx?$",
-        "cmd": "prettier -w \"${file}\""
-      },
-      {
-        // TypeScriptのフォーマット
-        "match": "\\.tsx?$",
-        "cmd": "prettier -w \"${file}\""
-      },
-      {
-        // TOMLのフォーマット
-        "match": "\\.toml$",
-        "cmd": "taplo fmt \"${file}\""
+        // treefmt側でフォーマッタを選択する
+        "match": ".*",
+        "cmd": "treefmt \"${file}\""
       }
     ]
   },
+  "python.analysis.typeCheckingMode": "strict",
   // CSS
   "[css][tailwindcss]": {
     "editor.defaultFormatter": "bradlc.vscode-tailwindcss",
     "editor.formatOnSave": true
-  },
-  // Python
-  "[python]": {
-    "editor.defaultFormatter": "charliermarsh.ruff",
-    "editor.formatOnSave": true
-  },
-  "python.analysis.typeCheckingMode": "strict",
-  "files.watcherExclude": {
-    "**/.git/**": true,
-    "**/.venv/**": true,
-    "**/__pycache__/**": true
-  },
-  "search.exclude": {
-    "**/.git/**": true,
-    "**/.venv/**": true,
-    "**/__pycache__/**": true
   }
 }
