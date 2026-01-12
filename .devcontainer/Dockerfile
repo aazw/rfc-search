@@ -1,4 +1,4 @@
-FROM jetpackio/devbox:latest AS builder
+FROM jetpackio/devbox:0.16.0 AS builder
 
 WORKDIR /code/rfc-search
 USER root:root
@@ -10,7 +10,7 @@ COPY --chown=${DEVBOX_USER}:${DEVBOX_USER} devbox.lock devbox.lock
 RUN devbox install
 
 
-FROM aazw/devcontainers-devbox-python-js:1 AS runtime
+FROM aazw/devcontainers-devbox-python-js:5 AS runtime
 
 USER root
 COPY --from=builder /nix/store /nix/store

@@ -1,7 +1,8 @@
 {
-  "name": "vsc-rfc-search",
+  "name": "vsc-rfc-search-${localWorkspaceFolderBasename}-${devcontainerId}",
   "build": {
-    "dockerfile": "Dockerfile"
+    "dockerfile": "Dockerfile",
+    "context": "."
   },
   "features": {
     "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {
@@ -32,13 +33,16 @@
       }
     }
   },
+  // "workspaceMount": "source=${localWorkspaceFolder}/..,target=/workspaces,type=bind,consistency=cached",
+  // "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
   "mounts": [
     {
-      "source": "${localWorkspaceFolder}/.claude",
+      "source": "${localWorkspaceFolder}/.claude-home-cache",
       "target": "/home/vscode/.claude",
       "type": "bind"
     }
   ],
+  "containerUser": "root",
   "remoteUser": "vscode",
   "remoteEnv": {
     "LOCAL_WORKSPACE_FOLDER": "${localWorkspaceFolder}",
@@ -48,8 +52,9 @@
   },
   "runArgs": [
     "--name",
-    "vsc-rfc-search",
+    "vsc-rfc-search-${localWorkspaceFolderBasename}-${devcontainerId}",
     "--add-host",
     "host.docker.internal:host-gateway"
-  ]
+  ],
+  "postAttachCommand": "task init"
 }
