@@ -9,7 +9,9 @@ import pandas as pd
 
 # Making Python loggers output all messages to stdout in addition to log file
 # https://stackoverflow.com/questions/14058453/making-python-loggers-output-all-messages-to-stdout-in-addition-to-log-file
-formatter = logging.Formatter("%(asctime)s - %(pathname)s:%(lineno)d - %(levelname)s - %(message)s")
+formatter = logging.Formatter(
+    "%(asctime)s - %(pathname)s:%(lineno)d - %(levelname)s - %(message)s"
+)
 
 handler = logging.StreamHandler(sys.stdout)
 handler.setLevel(logging.DEBUG)
@@ -21,8 +23,20 @@ appLogger.addHandler(handler)
 
 
 @click.command()
-@click.option("--dbfile", type=str, required=True, default=None, help="DuckDBのPersistent Database形式のファイル")
-@click.option("--column", type=str, required=False, default=None, help="特定のカラムのみ出力したい場合にカラム名を指定する")
+@click.option(
+    "--dbfile",
+    type=str,
+    required=True,
+    default=None,
+    help="DuckDBのPersistent Database形式のファイル",
+)
+@click.option(
+    "--column",
+    type=str,
+    required=False,
+    default=None,
+    help="特定のカラムのみ出力したい場合にカラム名を指定する",
+)
 def main(dbfile: str, column: str):
     appLogger.info(f"app start")
     appLogger.info(f"command line argument: --dbfile = {dbfile}")

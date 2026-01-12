@@ -8,7 +8,9 @@ import requests
 
 # Making Python loggers output all messages to stdout in addition to log file
 # https://stackoverflow.com/questions/14058453/making-python-loggers-output-all-messages-to-stdout-in-addition-to-log-file
-formatter = logging.Formatter("%(asctime)s - %(pathname)s:%(lineno)d - %(levelname)s - %(message)s")
+formatter = logging.Formatter(
+    "%(asctime)s - %(pathname)s:%(lineno)d - %(levelname)s - %(message)s"
+)
 
 handler = logging.StreamHandler(sys.stdout)
 handler.setLevel(logging.DEBUG)
@@ -81,7 +83,6 @@ command line argument: url = https://www.rfc-editor.org/rfc-index.xml
 
 # 再帰的にXMLの全パスを出力する
 def get_xml_paths(element, path="") -> set:
-
     current_path = f"{path}/{element.tag}"
     s = set([current_path])
 
@@ -93,7 +94,12 @@ def get_xml_paths(element, path="") -> set:
 
 
 @click.command()
-@click.option("--url", type=str, default="https://www.rfc-editor.org/rfc-index.xml", help="RFC一覧のXML形式が取得できるエンドポイント")
+@click.option(
+    "--url",
+    type=str,
+    default="https://www.rfc-editor.org/rfc-index.xml",
+    help="RFC一覧のXML形式が取得できるエンドポイント",
+)
 def main(url: str):
     appLogger.info(f"app start")
     appLogger.info(f"command line argument: --url = {url}")

@@ -13,7 +13,9 @@ import pandas as pd
 
 # Making Python loggers output all messages to stdout in addition to log file
 # https://stackoverflow.com/questions/14058453/making-python-loggers-output-all-messages-to-stdout-in-addition-to-log-file
-formatter = logging.Formatter("%(asctime)s - %(pathname)s:%(lineno)d - %(levelname)s - %(message)s")
+formatter = logging.Formatter(
+    "%(asctime)s - %(pathname)s:%(lineno)d - %(levelname)s - %(message)s"
+)
 
 handler = logging.StreamHandler(sys.stdout)
 handler.setLevel(logging.DEBUG)
@@ -66,8 +68,9 @@ def remove_zerofill(doc_id: str):
     return re.sub(r"^RFC0+", "RFC", doc_id)
 
 
-def mappingReferences(referenceMap: RFCReferenceMap, verbose: bool = False) -> tuple[RFCReferences, RFCReferencedBy]:
-
+def mappingReferences(
+    referenceMap: RFCReferenceMap, verbose: bool = False
+) -> tuple[RFCReferences, RFCReferencedBy]:
     # Mapping
     rfc_pattern = re.compile(r"((rfc|RFC)[0-9]+)")
 
@@ -102,15 +105,36 @@ def mappingReferences(referenceMap: RFCReferenceMap, verbose: bool = False) -> t
 
 
 @click.command()
-@click.option("-db", "--dbfile", type=str, required=True, default=None, help="DuckDB Persistent Databaseの出力先のファイルパス(duckdbファイル)")
-@click.option("--rfc-index", type=str, required=False, default=None, help="trasform_rfc_index_to_json.pyの結果を指定する(JSONファイル)")
-@click.option("--rfc-referencing-urls", type=str, required=False, default=None, help="extract_rfc_referencing_urls_from_rfc_txts.pyの結果を指定する(JSONファイル)")
+@click.option(
+    "-db",
+    "--dbfile",
+    type=str,
+    required=True,
+    default=None,
+    help="DuckDB Persistent Databaseの出力先のファイルパス(duckdbファイル)",
+)
+@click.option(
+    "--rfc-index",
+    type=str,
+    required=False,
+    default=None,
+    help="trasform_rfc_index_to_json.pyの結果を指定する(JSONファイル)",
+)
+@click.option(
+    "--rfc-referencing-urls",
+    type=str,
+    required=False,
+    default=None,
+    help="extract_rfc_referencing_urls_from_rfc_txts.pyの結果を指定する(JSONファイル)",
+)
 @click.option("--verbose", is_flag=True, show_default=True, default=False, help="")
 def main(dbfile: str, rfc_index: str, rfc_referencing_urls: str, verbose: bool):
     appLogger.info(f"app start")
     appLogger.info(f"command line argument: --dbfile = {dbfile}")
     appLogger.info(f"command line argument: --rfc_index = {rfc_index}")
-    appLogger.info(f"command line argument: --rfc-referencing-urls = {rfc_referencing_urls}")
+    appLogger.info(
+        f"command line argument: --rfc-referencing-urls = {rfc_referencing_urls}"
+    )
     appLogger.info(f"command line argument: --verbose = {verbose}")
 
     if not rfc_index and rfc_referencing_urls:
@@ -213,7 +237,9 @@ def main(dbfile: str, rfc_index: str, rfc_referencing_urls: str, verbose: bool):
         rfcReferences: RFCReferences = {}
         rfcRerencedBy: RFCReferencedBy = {}
         if rfc_referencing_urls:
-            appLogger.info(f"rfc referencing urls importing: file={rfc_referencing_urls}")
+            appLogger.info(
+                f"rfc referencing urls importing: file={rfc_referencing_urls}"
+            )
 
             if not os.path.exists(rfc_referencing_urls):
                 appLogger.error(f"file not found: {rfc_referencing_urls}")
@@ -225,10 +251,14 @@ def main(dbfile: str, rfc_index: str, rfc_referencing_urls: str, verbose: bool):
                 with open(abspath) as f:
                     # Format:  { "<doc_id>": [ "<other_doc_id>", ... ], ... }
                     referencesMap = json.load(f)
-                    appLogger.info(f"rfc referencing urls imported: file={rfc_referencing_urls}")
+                    appLogger.info(
+                        f"rfc referencing urls imported: file={rfc_referencing_urls}"
+                    )
             except json.JSONDecodeError as e:
                 appLogger.error(e)
-                appLogger.error(f"file is not properly formatted: {rfc_referencing_urls}")
+                appLogger.error(
+                    f"file is not properly formatted: {rfc_referencing_urls}"
+                )
                 sys.exit(-1)
             except Exception as e:
                 appLogger.error(e)
@@ -238,7 +268,9 @@ def main(dbfile: str, rfc_index: str, rfc_referencing_urls: str, verbose: bool):
             # 解析
             appLogger.info(f"rfc referencing urls preparing")
 
-            rfcReferences, rfcRerencedBy = mappingReferences(referencesMap, verbose=verbose)
+            rfcReferences, rfcRerencedBy = mappingReferences(
+                referencesMap, verbose=verbose
+            )
 
             appLogger.info(f"rfc referencing urls prepared")
 
@@ -256,20 +288,48 @@ def main(dbfile: str, rfc_index: str, rfc_referencing_urls: str, verbose: bool):
         rfc_entries_nomalized: list[RFCEntry] = []
         for entry in rfc_entries:
             doc_id = remove_zerofill(entry["doc_id"])
-            is_also = [remove_zerofill(item) for item in entry["is_also"]] if entry["is_also"] else None
-            obsoletes = [remove_zerofill(item) for item in entry["obsoletes"]] if entry["obsoletes"] else None
-            obsoleted_by = [remove_zerofill(item) for item in entry["obsoleted_by"]] if entry["obsoleted_by"] else None
-            updates = [remove_zerofill(item) for item in entry["updates"]] if entry["updates"] else None
-            updated_by = [remove_zerofill(item) for item in entry["updated_by"]] if entry["updated_by"] else None
-            see_also = [remove_zerofill(item) for item in entry["see_also"]] if entry["see_also"] else None
+            is_also = (
+                [remove_zerofill(item) for item in entry["is_also"]]
+                if entry["is_also"]
+                else None
+            )
+            obsoletes = (
+                [remove_zerofill(item) for item in entry["obsoletes"]]
+                if entry["obsoletes"]
+                else None
+            )
+            obsoleted_by = (
+                [remove_zerofill(item) for item in entry["obsoleted_by"]]
+                if entry["obsoleted_by"]
+                else None
+            )
+            updates = (
+                [remove_zerofill(item) for item in entry["updates"]]
+                if entry["updates"]
+                else None
+            )
+            updated_by = (
+                [remove_zerofill(item) for item in entry["updated_by"]]
+                if entry["updated_by"]
+                else None
+            )
+            see_also = (
+                [remove_zerofill(item) for item in entry["see_also"]]
+                if entry["see_also"]
+                else None
+            )
             references = rfcReferences.get(doc_id, None)
             referenced_by = rfcRerencedBy.get(doc_id, None)
 
             if references:
-                references = sorted(references, key=lambda x: int(re.sub(r"^RFC0*", "", x)))
+                references = sorted(
+                    references, key=lambda x: int(re.sub(r"^RFC0*", "", x))
+                )
 
             if referenced_by:
-                referenced_by = sorted(referenced_by, key=lambda x: int(re.sub(r"^RFC0*", "", x)))
+                referenced_by = sorted(
+                    referenced_by, key=lambda x: int(re.sub(r"^RFC0*", "", x))
+                )
 
             rfc_entries_nomalized.append(
                 {

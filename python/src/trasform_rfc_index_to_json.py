@@ -11,7 +11,9 @@ import requests
 
 # Making Python loggers output all messages to stdout in addition to log file
 # https://stackoverflow.com/questions/14058453/making-python-loggers-output-all-messages-to-stdout-in-addition-to-log-file
-formatter = logging.Formatter("%(asctime)s - %(pathname)s:%(lineno)d - %(levelname)s - %(message)s")
+formatter = logging.Formatter(
+    "%(asctime)s - %(pathname)s:%(lineno)d - %(levelname)s - %(message)s"
+)
 
 handler = logging.StreamHandler(sys.stdout)
 handler.setLevel(logging.DEBUG)
@@ -23,9 +25,30 @@ appLogger.addHandler(handler)
 
 
 @click.command()
-@click.option("--url", type=str, default="https://www.rfc-editor.org/rfc-index.xml", required=False, show_default=True, help="XMLを取得するURLで、基本変更しない")
-@click.option("-f", "--file", type=str, required=False, default=None, help="取得結果がファイルの場合の出力先")
-@click.option("-pp", "--pretty-print", is_flag=True, show_default=True, default=False, help="出力がstdoutかfileの場合、Pretty PrintなJSONで出力するかどうか")
+@click.option(
+    "--url",
+    type=str,
+    default="https://www.rfc-editor.org/rfc-index.xml",
+    required=False,
+    show_default=True,
+    help="XMLを取得するURLで、基本変更しない",
+)
+@click.option(
+    "-f",
+    "--file",
+    type=str,
+    required=False,
+    default=None,
+    help="取得結果がファイルの場合の出力先",
+)
+@click.option(
+    "-pp",
+    "--pretty-print",
+    is_flag=True,
+    show_default=True,
+    default=False,
+    help="出力がstdoutかfileの場合、Pretty PrintなJSONで出力するかどうか",
+)
 def main(url: str, file: str, pretty_print: bool):
     appLogger.info(f"app start")
     appLogger.info(f"command line argument: --url = {url}")
@@ -56,7 +79,6 @@ def main(url: str, file: str, pretty_print: bool):
 
     rfc_entries = []
     for entry in root.findall("rfc-entry", namespaces):
-
         # <rfc-entry>
         #     <doc-id>RFC0001</doc-id>
         #     <title>Host Software</title>
@@ -279,7 +301,9 @@ def main(url: str, file: str, pretty_print: bool):
         # updated-by/doc-id
         if updated_by_entry:
             updated_by = []
-            for updated_by_doc_id_entry in updated_by_entry.findall("doc-id", namespaces):
+            for updated_by_doc_id_entry in updated_by_entry.findall(
+                "doc-id", namespaces
+            ):
                 updated_by_doc_id = getattr(updated_by_doc_id_entry, "text", None)
                 updated_by.append(updated_by_doc_id)
 
@@ -364,7 +388,9 @@ def main(url: str, file: str, pretty_print: bool):
         # File
         abspath = os.path.abspath(file)
         with open(abspath, mode="w") as f:
-            appLogger.info(f"data exporting to the file: file={file} filepath={abspath}")
+            appLogger.info(
+                f"data exporting to the file: file={file} filepath={abspath}"
+            )
 
             if pretty_print:
                 f.write(json.dumps(rfc_entries, indent=4))

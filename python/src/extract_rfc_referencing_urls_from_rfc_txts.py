@@ -14,7 +14,9 @@ import requests
 
 # Making Python loggers output all messages to stdout in addition to log file
 # https://stackoverflow.com/questions/14058453/making-python-loggers-output-all-messages-to-stdout-in-addition-to-log-file
-formatter = logging.Formatter("%(asctime)s - %(pathname)s:%(lineno)d - %(levelname)s - %(message)s")
+formatter = logging.Formatter(
+    "%(asctime)s - %(pathname)s:%(lineno)d - %(levelname)s - %(message)s"
+)
 
 handler = logging.StreamHandler(sys.stdout)
 handler.setLevel(logging.DEBUG)
@@ -26,9 +28,28 @@ appLogger.addHandler(handler)
 
 
 @click.command()
-@click.option("--url", type=str, default="https://www.rfc-editor.org/in-notes/tar/RFC-all.zip", required=False, show_default=True, help="各RFC本文を取得するURLで、基本変更しない")
-@click.option("--zipfile", type=str, default=None, required=False, help="各RFC本文をURLから取得せずローカルのファイルを参照する場合に利用する")
-@click.option("--file", type=str, default=None, required=False, help="各RFCから他RFCへの参照URLの抽出結果を出力するファイル")
+@click.option(
+    "--url",
+    type=str,
+    default="https://www.rfc-editor.org/in-notes/tar/RFC-all.zip",
+    required=False,
+    show_default=True,
+    help="各RFC本文を取得するURLで、基本変更しない",
+)
+@click.option(
+    "--zipfile",
+    type=str,
+    default=None,
+    required=False,
+    help="各RFC本文をURLから取得せずローカルのファイルを参照する場合に利用する",
+)
+@click.option(
+    "--file",
+    type=str,
+    default=None,
+    required=False,
+    help="各RFCから他RFCへの参照URLの抽出結果を出力するファイル",
+)
 @click.option("--verbose", is_flag=True, show_default=True, default=False, help="")
 def main(url: str, zipfile: str, file: str, verbose: bool):
     appLogger.info(f"app start")
@@ -41,10 +62,14 @@ def main(url: str, zipfile: str, file: str, verbose: bool):
     try:
         if zipfile:
             abspath = os.path.abspath(zipfile)
-            appLogger.info(f"zipfile importing from the zip file: file={zipfile} filepath={abspath}")
+            appLogger.info(
+                f"zipfile importing from the zip file: file={zipfile} filepath={abspath}"
+            )
 
             input_zip = ZipFile(abspath)
-            appLogger.info(f"zipfile imported from the zip file: file={zipfile} filepath={abspath}")
+            appLogger.info(
+                f"zipfile imported from the zip file: file={zipfile} filepath={abspath}"
+            )
         else:
             appLogger.info(f"zipfile importing from internet: url={url}")
 
@@ -90,7 +115,9 @@ def main(url: str, zipfile: str, file: str, verbose: bool):
     # * https://www.rfc-editor.org/info/std53
     # * https://www.rfc-editor.org/info/std80
     # * https://www.rfc-editor.org/rfc/rfc5234
-    url_pattern2 = re.compile(r"(https?://(www\.)?rfc-editor\.org/(rfc|info|errata|ien|)/(rfc|bcp|std|sstd|eid|ien|)?[0-9]+(\.txt)?)")
+    url_pattern2 = re.compile(
+        r"(https?://(www\.)?rfc-editor\.org/(rfc|info|errata|ien|)/(rfc|bcp|std|sstd|eid|ien|)?[0-9]+(\.txt)?)"
+    )
 
     # RFC参照URLパターン2
     # Examples:
@@ -98,7 +125,9 @@ def main(url: str, zipfile: str, file: str, verbose: bool):
     # * http://tools.ietf.org/html/rfc5965
     # * http://www.ietf.org/rfc/ien/ien116.txt
     # * http://www.ietf.org/rfc/rfc2780.txt
-    url_pattern3 = re.compile(r"(https?://((www|tools)\.)?ietf\.org/(rfc|html)/(rfc|ien/ien)[0-9]+(\.txt)?)")
+    url_pattern3 = re.compile(
+        r"(https?://((www|tools)\.)?ietf\.org/(rfc|html)/(rfc|ien/ien)[0-9]+(\.txt)?)"
+    )
 
     referencingURLsMap: dict = {}
 
@@ -113,7 +142,9 @@ def main(url: str, zipfile: str, file: str, verbose: bool):
 
                 # https://qiita.com/kojix2/items/e038de99d8a1aa3c4ba4
                 # https://docs.python.org/ja/3/library/stdtypes.html#bytes.decode
-                zip_content_str: str = zip_content.decode("utf-8", errors="ignore")  # Form Feedの制御文字？か何かでエラーが出るRFCがあるので、エラーを無視する
+                zip_content_str: str = zip_content.decode(
+                    "utf-8", errors="ignore"
+                )  # Form Feedの制御文字？か何かでエラーが出るRFCがあるので、エラーを無視する
                 # print(zip_content_str)
 
                 lines = zip_content_str.splitlines()
@@ -127,7 +158,14 @@ def main(url: str, zipfile: str, file: str, verbose: bool):
                     else:
                         if line.startswith("    ") and not line.startswith("     "):
                             line = line[4:]
-                        if line.endswith("-") or line.endswith("/") or line.endswith("_") or line.endswith("?") or line.endswith("&") or line.endswith("#"):
+                        if (
+                            line.endswith("-")
+                            or line.endswith("/")
+                            or line.endswith("_")
+                            or line.endswith("?")
+                            or line.endswith("&")
+                            or line.endswith("#")
+                        ):
                             current_paragraph += line.lstrip()
                         else:
                             current_paragraph += " " + line
@@ -139,7 +177,6 @@ def main(url: str, zipfile: str, file: str, verbose: bool):
 
                     # 簡易抽出したものから、WebのURLをフィルタ
                     for extract_url in extract_urls:
-
                         # RFC参照URLパターン1
                         urls = url_pattern2.findall(extract_url)
                         if len(urls) > 0:
@@ -168,7 +205,9 @@ def main(url: str, zipfile: str, file: str, verbose: bool):
     if file:
         abspath = os.path.abspath(file)
         with open(abspath, mode="w") as f:
-            appLogger.info(f"data exporting to the file: file={file} filepath={abspath}")
+            appLogger.info(
+                f"data exporting to the file: file={file} filepath={abspath}"
+            )
 
             f.write(json.dumps(referencingURLsMap, indent=4))
 
