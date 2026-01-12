@@ -1,7 +1,10 @@
 {
   "$schema": "https://raw.githubusercontent.com/jetify-com/devbox/0.16.0/.schema/devbox.schema.json",
   "packages": [
-    //
+    // https://github.com/duckdb/duckdb
+    // https://www.nixhub.io/packages/duckdb
+    // https://search.nixos.org/packages?show=duckdb&query=duckdb
+    // https://github.com/NixOS/nixpkgs/blob/master/pkgs/by-name/du/duckdb/package.nix
     "duckdb@1.4.1"
   ]
 }
