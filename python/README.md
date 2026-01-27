@@ -8,8 +8,9 @@
 ### 1. src/trasform_rfc_index_to_json.py  
 
 以下1つ目のURLのトップページの『Browse the RFC Index』 → 『XML』のリンクが、2つ目のURLである.
-* https://www.rfc-editor.org/  
-* https://www.rfc-editor.org/rfc-index.xml
+
+* <https://www.rfc-editor.org/>  
+* <https://www.rfc-editor.org/rfc-index.xml>
 
 このXML形式の一覧を解析し、結果をJSON形式として出力・保存する.
 
@@ -35,8 +36,9 @@ $ python src/trasform_rfc_index_to_json.py --file rfc-index.json
 ### 2. src/extract_rfc_referencing_urls_from_rfc_txts.py
 
 以下1つ目のURLのトップページの『Get TAR or ZIP files of RFCs』→『All RFCs』→『TXT』→『ZIP』のリンクが2つ目のURLである
-* https://www.rfc-editor.org/retrieve/bulk/
-* https://www.rfc-editor.org/in-notes/tar/RFC-all.zip
+
+* <https://www.rfc-editor.org/retrieve/bulk/>
+* <https://www.rfc-editor.org/in-notes/tar/RFC-all.zip>
 
 このZIPには全RFCのテキスト形式のほか、一部はPDFやXMLも含まれている.  
 すべての一貫しているのがTXT形式のためこれを解析し、結果をJSON形式として出力・保存する.
@@ -68,10 +70,11 @@ $ python src/extract_rfc_referencing_urls_from_rfc_txts.py --zipfile ./RFC-all.z
 ### 3. src/create_duckdb_persistent_db.py
 
 DuckDBのPersistent Databaseファイル(`.duckdb`など)を作成し、かつ`rfc_entries`テーブルを作成する.
+
 * DuckDBのPersistent Databaseは以下のようなファイル拡張子が使われる
-    * `.db` 
-    * `.duckdb`
-    * `.ddb`
+  * `.db`
+  * `.duckdb`
+  * `.ddb`
 * 本プロジェクトでは、わかりやすさ重視で`.duckdb`を利用する.
 
 繰り返し実行した場合、上書きで初期化はされないことに注意.  
@@ -168,14 +171,13 @@ $ python src/verify_duckdb_persistent_db.py --dbfile rfc.duckdb
 2025-01-13 14:20:28,006 - /workspaces/rfc-search/python/src/verify_duckdb_persistent_db.py:59 - INFO - app finished
 ```
 
-
 ## References
 
 ### DuckDB
 
 * Connect - Persistent Database  
-  https://duckdb.org/docs/connect/overview.html#persistent-database
+  <https://duckdb.org/docs/connect/overview.html#persistent-database>
 * Python API  
-  https://duckdb.org/docs/api/python/overview
+  <https://duckdb.org/docs/api/python/overview>
 * Data Types  
-  https://duckdb.org/docs/sql/data_types/overview.html
+  <https://duckdb.org/docs/sql/data_types/overview.html>

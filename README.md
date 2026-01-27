@@ -2,30 +2,28 @@
 
 A web tool for easily searching and visualizing RFCs and their dependencies.
 
-
 ## 概要
 
 * 各RFCのタイトルやメタデータ等をいい感じに一覧でき、かつ検索できるようにするやつ ※本文は見ない
 * 追加要素として、各RFCの依存関係を、本文を解析して取得している
-    * 各RFCがどの他RFCを参照しているか、どの他RFCから算出されているか
+  * 各RFCがどの他RFCを参照しているか、どの他RFCから算出されているか
 
 ## 構成要素
 
 * Python
-    * RFCの取得と解析
-    * DuckDB WASMのPersistent Databaseの作成 (≒データが保存された`xxx.duckdb`ファイル)
+  * RFCの取得と解析
+  * DuckDB WASMのPersistent Databaseの作成 (≒データが保存された`xxx.duckdb`ファイル)
 
 * Node
-    * 解析結果のWebでの表示
-    * フロントエンドのみ
-    * React + TypeScript + Tailwind CSS
-    * ビルドツールはVite
-    * バックエンドを省略するため、DuckDB WASMを使用
-    * Python側で作成したPersistent DatabaseをDuckDB WASMで読み込んで利用する
+  * 解析結果のWebでの表示
+  * フロントエンドのみ
+  * React + TypeScript + Tailwind CSS
+  * ビルドツールはVite
+  * バックエンドを省略するため、DuckDB WASMを使用
+  * Python側で作成したPersistent DatabaseをDuckDB WASMで読み込んで利用する
 
 * GitHub Actions
-    * Nodeの成果物をデプロイし、公開する
-
+  * Nodeの成果物をデプロイし、公開する
 
 ## Process to Build
 

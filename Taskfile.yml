@@ -25,7 +25,7 @@ tasks:
       # remove system files
       - task remove_system_files
       # キャッシュクリア (skillsの読み込み時にcacheが悪さすることが多い)
-      - rm -rf ./.claude-home-cache/plugins/cache/*
+      - rm -rf ./.devcontainer/.state/claude/plugins/cache/*
       # python
       - task uv_sync
     silent: false
@@ -33,7 +33,7 @@ tasks:
   fmt:
     dir: "{{ .TASKFILE_DIR }}"
     cmds:
-      - treefmt -vv
+      - treefmt -vv --no-cache
     silent: false
 
   uv_sync:

@@ -8,7 +8,6 @@
 * DuckDB WASM
 * Vite
 
-
 ## Run Dev Server
 
 ```bash
@@ -30,7 +29,6 @@ Re-optimizing dependencies because lockfile has changed
   ➜  Local:   http://127.0.0.1:5173/
   ➜  press h + enter to show help
 ```
-
 
 ## Build
 
@@ -58,24 +56,23 @@ dist/assets/index-BogsuIO6.js                         355.89 kB │ gzip: 95.05 
 ✓ built in 4.96s
 ```
 
-
 ## References
 
 ### DuckDB
 
 * DuckDB-WASM  
-  https://shell.duckdb.org/docs/index.html
+  <https://shell.duckdb.org/docs/index.html>
 * DuckDB Wasm  
-  https://duckdb.org/docs/api/wasm/overview
+  <https://duckdb.org/docs/api/wasm/overview>
 * Query  
-  https://duckdb.org/docs/api/wasm/query
+  <https://duckdb.org/docs/api/wasm/query>
 
 ### React
 
 * 【React】イベントハンドラで引数を使いたい【備忘録】  
-  https://qiita.com/tsuuuuu_san/items/73747c8b6e6e28f6bd23
+  <https://qiita.com/tsuuuuu_san/items/73747c8b6e6e28f6bd23>
 
 ### Tailwind CSS
 
 * Buttons  
-  https://v1.tailwindcss.com/components/buttons
+  <https://v1.tailwindcss.com/components/buttons>
