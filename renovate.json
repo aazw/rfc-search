@@ -41,7 +41,7 @@
     },
     {
       // pythonそのものに関するものを1つにまとめる
-      "matchPackageNames": ["python"],
+      "matchDepNames": ["python"],
       "groupName": "python-runtime",
       // major と non-major を同一PRに入れる
       "separateMajorMinor": false
