@@ -16,28 +16,35 @@
       "minimumReleaseAge": null
     },
     {
+      // devcontainer関連をまとめる
       "matchFileNames": [".devcontainer/**"],
       "groupName": "devcontainer"
     },
     {
+      // github actions関連をまとめる
       "matchFileNames": [".github/workflows/*.yaml"],
       "groupName": "githubactions"
     },
     {
+      // python/uv関連をまとめる
       "matchFileNames": ["python/pyproject.toml", "python/uv.lock"],
       "groupName": "python"
     },
     {
-      "matchFileNames": ["python/.python-version"],
-      "groupName": "python-runtime"
-    },
-    {
+      // npm関連をまとめる
       "matchFileNames": [
         "node/package.json",
         "node/package-lock.json",
         "node/yarn.lock"
       ],
       "groupName": "node"
+    },
+    {
+      // pythonそのものに関するものを1つにまとめる
+      "matchPackageNames": ["python"],
+      "groupName": "python-runtime",
+      // major と non-major を同一PRに入れる
+      "separateMajorMinor": false
     }
   ]
 }
