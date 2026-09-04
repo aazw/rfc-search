@@ -1,83 +1,65 @@
 {
   "lockfile_version": "1",
   "packages": {
-    "duckdb@1.4.3": {
-      "last_modified": "2026-01-02T14:39:32Z",
-      "resolved": "github:NixOS/nixpkgs/16c7794d0a28b5a37904d55bcca36003b9109aaa#duckdb",
+    "duckdb@1.5.5": {
+      "last_modified": "2026-08-27T07:16:00Z",
+      "resolved": "github:NixOS/nixpkgs/c27cdad491a991b11ed731760aa2ef8db0cb0410#duckdb",
       "source": "devbox-search",
-      "version": "1.4.3",
+      "version": "1.5.5",
       "systems": {
         "aarch64-darwin": {
           "outputs": [
             {
               "name": "out",
-              "path": "/nix/store/6xk7kii6v48b2n1045vhy63frr8bhmlc-duckdb-1.4.3",
+              "path": "/nix/store/95dq4bbyd2xp02wqg5f165l1pigwggmd-duckdb-1.5.5",
               "default": true
             },
             {
-              "name": "lib",
-              "path": "/nix/store/kk5f06bw7cx88f68xlj5ljglfdjf97j3-duckdb-1.4.3-lib"
+              "name": "dev",
+              "path": "/nix/store/1rjdlsf6dvzkcg555l8r63lzzj77zb79-duckdb-1.5.5-dev"
             },
             {
-              "name": "dev",
-              "path": "/nix/store/9kqcky8w74s82063j1izi593az22vxvf-duckdb-1.4.3-dev"
+              "name": "lib",
+              "path": "/nix/store/50zh058rrk8kzdpkf2m8k8h65fml473b-duckdb-1.5.5-lib"
             }
           ],
-          "store_path": "/nix/store/6xk7kii6v48b2n1045vhy63frr8bhmlc-duckdb-1.4.3"
+          "store_path": "/nix/store/95dq4bbyd2xp02wqg5f165l1pigwggmd-duckdb-1.5.5"
         },
         "aarch64-linux": {
           "outputs": [
             {
               "name": "out",
-              "path": "/nix/store/4xab9sl421hn4rapajlxlcraajnjvjp1-duckdb-1.4.3",
+              "path": "/nix/store/8jnfyvibkcz2njr4mv9dhpv713xjgyvm-duckdb-1.5.5",
               "default": true
             },
             {
               "name": "dev",
-              "path": "/nix/store/3v8bdhz01br132y76zawgnw37af63bb1-duckdb-1.4.3-dev"
+              "path": "/nix/store/1i6559h0fkgi5ab48c7ra1qbxk96pikl-duckdb-1.5.5-dev"
             },
             {
               "name": "lib",
-              "path": "/nix/store/qa6pr7qryjxk5cklpn0vzfsx2rizxq29-duckdb-1.4.3-lib"
+              "path": "/nix/store/62kgphl74dhqsn9qxia3f5ypp2qii2mv-duckdb-1.5.5-lib"
             }
           ],
-          "store_path": "/nix/store/4xab9sl421hn4rapajlxlcraajnjvjp1-duckdb-1.4.3"
-        },
-        "x86_64-darwin": {
-          "outputs": [
-            {
-              "name": "out",
-              "path": "/nix/store/538w79rn9adzff0045m96yc1mxw9wvjy-duckdb-1.4.3",
-              "default": true
-            },
-            {
-              "name": "dev",
-              "path": "/nix/store/n9dmqbsj3gk9scws4q622gs26ldg2i3z-duckdb-1.4.3-dev"
-            },
-            {
-              "name": "lib",
-              "path": "/nix/store/z4a8fxk9kcish54j0kdn8rxbx7yhi2pp-duckdb-1.4.3-lib"
-            }
-          ],
-          "store_path": "/nix/store/538w79rn9adzff0045m96yc1mxw9wvjy-duckdb-1.4.3"
+          "store_path": "/nix/store/8jnfyvibkcz2njr4mv9dhpv713xjgyvm-duckdb-1.5.5"
         },
         "x86_64-linux": {
           "outputs": [
             {
               "name": "out",
-              "path": "/nix/store/h877n4xpa1wjjlf9sgy17mp91vq48xxg-duckdb-1.4.3",
+              "path": "/nix/store/x6is8mcdrkb1mh3i5ichid1ddyzkvbjp-duckdb-1.5.5",
               "default": true
             },
             {
               "name": "dev",
-              "path": "/nix/store/6ama5di05mv2mcyzk2kwshw3d73wbxx3-duckdb-1.4.3-dev"
+              "path": "/nix/store/p8x07c20clb5ivz95r3vsbnadysxcbsg-duckdb-1.5.5-dev"
             },
             {
               "name": "lib",
-              "path": "/nix/store/rpnjk1fwhfv392babs865h0w8pfrbiyh-duckdb-1.4.3-lib"
+              "path": "/nix/store/qbbl7jvh3y5f0a6g3y48h5y7hi2d8l88-duckdb-1.5.5-lib"
             }
           ],
-          "store_path": "/nix/store/h877n4xpa1wjjlf9sgy17mp91vq48xxg-duckdb-1.4.3"
+          "store_path": "/nix/store/x6is8mcdrkb1mh3i5ichid1ddyzkvbjp-duckdb-1.5.5"
         }
       }
     },
