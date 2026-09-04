@@ -1,4 +1,4 @@
-FROM jetpackio/devbox:0.16.0 AS builder
+FROM jetpackio/devbox:0.18.0 AS builder
 
 WORKDIR /code/rfc-search
 USER root:root
